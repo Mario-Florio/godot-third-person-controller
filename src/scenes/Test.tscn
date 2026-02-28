@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cs53ghighs1sd"]
+
+[ext_resource type="Script" uid="uid://din2jv21d776j" path="res://scripts/ThirdPersonController.gd" id="1_wen4y"]
+
+[node name="ThirdPersonController" type="Node3D" unique_id=1860287399]
+script = ExtResource("1_wen4y")
+metadata/_custom_type_script = "uid://din2jv21d776j"
