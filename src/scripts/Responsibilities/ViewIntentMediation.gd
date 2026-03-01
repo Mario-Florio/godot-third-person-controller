@@ -1,8 +1,23 @@
 class_name ViewIntentMediation
 extends RefCounted
 
+var _viewManager: ViewManager
+var _viewSemantics: ViewSemantics
+
+func _init(viewManager: ViewManager, viewSemantics: ViewSemantics) -> void:
+	_viewManager = viewManager
+	_viewSemantics = viewSemantics
+
 func execute(intentBearingInput: InputInterface.IntentBearingInput) -> void:
-	pass
+	_viewManager.execute()
+	
+	var canonicalView := ViewManager.Snapshot.new(_viewManager)
+	
+	_viewSemantics.execute(ViewSemantics.Payload.new(
+		intentBearingInput.look_delta(),
+		intentBearingInput.focus(),
+		intentBearingInput.swap_shoulder()
+	).addActiveView(canonicalView.activeView))
 
 func produce() -> ReferenceBasis:
 	return ReferenceBasis.new()

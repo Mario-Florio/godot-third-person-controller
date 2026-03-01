@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bfoliajq1ojx4"]
+
+[ext_resource type="Script" uid="uid://bpg48ka3dpe1u" path="res://scripts/Nodes/ViewArea/ViewArea.gd" id="1_socxk"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hglc5"]
+
+[node name="ViewProbe" type="Area3D" unique_id=311700622]
+script = ExtResource("1_socxk")
+metadata/_custom_type_script = "uid://bpg48ka3dpe1u"
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=182006046]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+shape = SubResource("SphereShape3D_hglc5")
