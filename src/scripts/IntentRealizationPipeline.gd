@@ -1,6 +1,9 @@
 class_name IntentRealizationPipeline
 extends RefCounted
 
+# Domain Controllers
+var agentInputHandler : AgentInputHandler
+
 # Responsibilities
 var inputInterface        : InputInterface
 var viewIntentMediation   : ViewIntentMediation
@@ -9,10 +12,11 @@ var realizationAuthority  : RealizationAuthority
 var presentationMediation : PresentationMediation
 
 func setup(config: ThirdPersonControllerConfig) -> void:
+	_constructDomainControllers(config)
 	_constructResponsibilities()
 
 func notify(event: InputEvent) -> void:
-	pass
+	agentInputHandler.notify(event)
 
 func run(delta: float) -> void:
 	inputInterface.execute()
@@ -37,8 +41,11 @@ func run(delta: float) -> void:
 	presentationMediation.execute(realizationAuthority.produce())
 
 # Utils
+func _constructDomainControllers(config : ThirdPersonControllerConfig) -> void:
+	agentInputHandler = AgentInputHandler.new(config.inputConfig)
+
 func _constructResponsibilities() -> void:
-	inputInterface        = InputInterface.new()
+	inputInterface        = InputInterface.new(agentInputHandler)
 	viewIntentMediation   = ViewIntentMediation.new()
 	intentResolution      = IntentResolution.new()
 	realizationAuthority  = RealizationAuthority.new()

@@ -1,0 +1,81 @@
+class_name AgentInputHandler
+extends RefCounted
+
+enum SpeedIntent { SLOW, NORMAL, FAST }
+
+var _config: InputConfig
+
+# Intentions
+var _look_delta: Vector2         # Desired look change
+var _look_delta_pending: Vector2 # Used to manage look_delta queue (storing mouse-motion captures each event | freeing stale state each frame)
+var _focus: bool
+var _swap_shoulder: bool
+
+func _init(config: InputConfig) -> void:
+	_config = config
+	
+	_init_input_map(_config.Actions.values())
+
+func notify(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		_look_delta_pending += event.relative
+
+func execute() -> void:
+	_reset_state()
+	_resolve_intent()
+
+func export(snapshot: Snapshot) -> void:
+	snapshot.look_delta = _look_delta
+	snapshot.focus = _focus
+	snapshot.swap_shoulder = _swap_shoulder
+
+# Utils
+func _reset_state() -> void: # Resets ephemeral state so stale intent isn't reused if not updated on resolve
+	_look_delta = _look_delta_pending
+	_look_delta_pending = Vector2.ZERO
+	_swap_shoulder = false
+
+func _resolve_intent() -> void:
+	# Resolve focus intent
+	if Input.is_action_pressed(_config.Actions.CAMERA_FOCUS): _focus = true
+	else: _focus = false
+	
+	# Resolve shoulder switch intent
+	if Input.is_action_just_pressed(_config.Actions.SWAP_SHOULDER): _swap_shoulder = true
+
+func _init_input_map(actions: Array) -> void:
+	for action_name in actions:
+		_ensure_action(action_name)
+		
+		match action_name:
+			_config.Actions.CAMERA_FOCUS:
+				var mouse_event := InputEventMouseButton.new()
+				mouse_event.button_index = _config.camera_focus_mouse_button
+				_map_event_to_action(action_name, mouse_event)
+			
+			_config.Actions.SWAP_SHOULDER:
+				var key_event := InputEventKey.new()
+				key_event.physical_keycode = _config.shoulder_swap_key
+				_map_event_to_action(action_name, key_event)
+
+func _ensure_action(action_name: String):
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+
+func _map_event_to_action(action_name: String, event: InputEvent) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+	
+	# Only add if event not already present
+	for existing_event in InputMap.action_get_events(action_name):
+		if existing_event == event:
+			return
+	InputMap.action_add_event(action_name, event)
+
+class Snapshot extends RefCounted:
+	var look_delta: Vector2
+	var focus: bool
+	var swap_shoulder: bool
+	
+	func _init(agentInputHandler: AgentInputHandler) -> void:
+		agentInputHandler.export(self)
