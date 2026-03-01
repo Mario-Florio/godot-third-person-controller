@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://cujlyq2h2p8wl"]
+
+[ext_resource type="Script" uid="uid://px76fefx177a" path="res://scripts/Nodes/ViewInterface/FollowCameraMount.gd" id="1_ur27k"]
+[ext_resource type="Script" uid="uid://bwyajlrmc5ba6" path="res://scripts/Nodes/ViewArea/ViewArea.gd" id="2_2105e"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ur27k"]
+
+[node name="FollowCameraMount3D" type="Node3D" unique_id=484763819 node_paths=PackedStringArray("spring_arm", "view", "viewArea")]
+script = ExtResource("1_ur27k")
+spring_arm = NodePath("SpringArm3D")
+view = NodePath("SpringArm3D/Camera3D")
+viewArea = NodePath("ViewArea3D")
+metadata/_edit_group_ = true
+
+[node name="SpringArm3D" type="SpringArm3D" parent="." unique_id=336704811]
+
+[node name="Camera3D" type="Camera3D" parent="SpringArm3D" unique_id=1488255779]
+
+[node name="ViewArea3D" type="Area3D" parent="." unique_id=548985596 node_paths=PackedStringArray("viewInterface") groups=["Views"]]
+script = ExtResource("2_2105e")
+viewInterface = NodePath("..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ViewArea3D" unique_id=2030697583]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+shape = SubResource("SphereShape3D_ur27k")
