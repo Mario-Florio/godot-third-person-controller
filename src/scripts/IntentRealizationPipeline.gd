@@ -2,9 +2,10 @@ class_name IntentRealizationPipeline
 extends RefCounted
 
 # Domain Controllers
-var agentInputHandler : AgentInputHandler
-var viewManager       : ViewManager
-var viewSemantics     : ViewSemantics
+var agentInputHandler   : AgentInputHandler
+var viewManager         : ViewManager
+var viewSemantics       : ViewSemantics
+var locomotionSemantics : LocomotionSemantics
 
 # Responsibilities
 var inputInterface        : InputInterface
@@ -51,11 +52,12 @@ func _constructDomainControllers(config : ThirdPersonControllerConfig) -> void:
 	agentInputHandler = AgentInputHandler.new(config.inputConfig)
 	viewManager       = ViewManager.new()
 	viewSemantics     = ViewSemantics.new(config.viewConfig)
+	locomotionSemantics = LocomotionSemantics.new(config.locomotionConfig)
 
 func _constructResponsibilities() -> void:
 	inputInterface        = InputInterface.new(agentInputHandler)
 	viewIntentMediation   = ViewIntentMediation.new(viewManager, viewSemantics)
-	intentResolution      = IntentResolution.new()
+	intentResolution      = IntentResolution.new(locomotionSemantics)
 	realizationAuthority  = RealizationAuthority.new()
 	presentationMediation = PresentationMediation.new()
 
