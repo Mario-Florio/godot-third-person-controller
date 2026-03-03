@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://c2xcwuvyss08"]
+
+[ext_resource type="Material" uid="uid://dqbi1h868pv0t" path="res://assets/resources/visuals/material/masculine_material.tres" id="1_8b62q"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_qnthn"]
+material = ExtResource("1_8b62q")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nnks8"]
+material = ExtResource("1_8b62q")
+
+[node name="MasculineMesh" type="Node3D" unique_id=1456001530]
+
+[node name="visuals" type="Node3D" parent="." unique_id=1743912882]
+transform = Transform3D(-0.3000589, -1.1381214e-07, 0, 4.5307633e-08, -0.75374377, 0, 0, 0, 0.16869795, -7.4198354e-08, 1.0711963, 0)
+
+[node name="Torso" type="MeshInstance3D" parent="visuals" unique_id=2142834126]
+transform = Transform3D(1.43, -1.18715666e-14, 0, 5.0803804e-15, 0.83538723, 0, 0, 0, 1, 1.1118345e-15, -0.0782384, 0)
+mesh = SubResource("PrismMesh_qnthn")
+skeleton = NodePath("../../MeshInstance3D")
+
+[node name="Head" type="MeshInstance3D" parent="visuals" unique_id=1762771499]
+transform = Transform3D(0.60677916, -2.3935942e-15, 0, 0, 0.15018271, 0, 0, 0, 1, 0, -0.69139993, 0)
+mesh = SubResource("CapsuleMesh_nnks8")
+skeleton = NodePath("../Torso")
+
+[node name="Hips" type="MeshInstance3D" parent="visuals" unique_id=609482394]
+transform = Transform3D(-1.1509459, 1.3253582e-07, 0, -4.0055514e-08, -0.60351956, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("PrismMesh_qnthn")
+skeleton = NodePath("../../MeshInstance3D")
+
+[node name="Legs" type="MeshInstance3D" parent="visuals" unique_id=817297941]
+transform = Transform3D(1.1536323, -4.8944077e-07, 0, 8.0298015e-08, 1.114367, 0, 0, 0, 1, -3.7186044e-07, 0.846658, 0)
+mesh = SubResource("PrismMesh_qnthn")
+skeleton = NodePath("../../MeshInstance3D")

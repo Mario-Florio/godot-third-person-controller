@@ -20,6 +20,7 @@ class State extends RefCounted:
 	
 	# Physical Actor State
 	var curr_motion_state := MotionState.STILL
+	var last_position     := Vector3.ZERO
 	
 	func _init(_config: MotionConfig, _motionTarget: CharacterBody3D) -> void:
 		config = _config
@@ -45,6 +46,10 @@ func execute(delta: float, payload: Payload) -> void:
 
 func export(snapshot: Snapshot) -> void:
 	snapshot.motion_state = _motionState.curr_motion_state
+	snapshot.global_transform = _motionState.motionTarget.global_transform
+	snapshot.last_position = _motionState.last_position
+	snapshot.max_horizontal_speed = _motionState.config.MAX_HORIZONTAL_SPEED
+	snapshot.speed = _motionState.motionTarget.velocity.length()
 
 # Utils
 func _update_state() -> void:
@@ -61,6 +66,9 @@ func _update_state() -> void:
 	# Discard Proposals (from previous frame)
 	_motionState.horizontalProposal = null
 	_motionState.rotationalProposal = null
+	
+	# Update last_position
+	_motionState.last_position = _motionState.motionTarget.global_position
 
 class Payload extends RefCounted:
 	var proposals: Array[MotionProposal]
@@ -70,6 +78,10 @@ class Payload extends RefCounted:
 
 class Snapshot extends RefCounted:
 	var motion_state: MotionState
+	var global_transform: Transform3D
+	var last_position: Vector3
+	var max_horizontal_speed: float
+	var speed: float
 	
 	func _init(motionAuthority: MotionAuthority) -> void:
 		motionAuthority.export(self)

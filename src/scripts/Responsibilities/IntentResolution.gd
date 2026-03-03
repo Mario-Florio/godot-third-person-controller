@@ -32,6 +32,7 @@ func produce() -> SemanticIntent:
 
 class SemanticIntent extends RefCounted:
 	var _intents: ReadOnlyArray
+	var _bounded: bool
 	
 	func _init(locomotionSemantics: LocomotionSemantics) -> void:
 		var locomotionSnap := LocomotionSemantics.Snapshot.new(locomotionSemantics)
@@ -42,10 +43,14 @@ class SemanticIntent extends RefCounted:
 			read_only_intents.append(read_only_intent)
 		
 		_intents = ReadOnlyArray.new(read_only_intents)
+		_bounded = locomotionSnap.bounded
 	
 	# Getters
 	func intents() -> ReadOnlyArray:
 		return _intents
+	
+	func bounded() -> bool:
+		return _bounded
 
 # Utils
 func _deriveWorldState() -> LocomotionSemantics.WorldState:

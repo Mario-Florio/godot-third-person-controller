@@ -42,6 +42,7 @@ func execute(payload: Payload) -> void:
 
 func export(snapshot: Snapshot) -> void:
 	snapshot.intents = _locomotionState.intents
+	snapshot.bounded = _locomotionStyle.bounded
 
 # Utils
 func _update_state(payload: Payload) -> void:
@@ -149,6 +150,7 @@ class Payload extends RefCounted:
 
 class Snapshot extends RefCounted:
 	var intents: Array[MotionIntent]
+	var bounded: bool
 	
 	func _init(locomotionSemantics: LocomotionSemantics) -> void:
 		locomotionSemantics.export(self)

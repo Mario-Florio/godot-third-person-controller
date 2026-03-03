@@ -2,12 +2,13 @@
 
 [ext_resource type="Script" uid="uid://dm1p3xkcwtoux" path="res://scripts/ThirdPersonCharacter.gd" id="1_xpvjh"]
 [ext_resource type="Shape3D" uid="uid://cqlv1rd6jpci6" path="res://assets/resources/shape/basic_capsule.tres" id="2_0xybg"]
-[ext_resource type="PackedScene" uid="uid://cfxot8vk3hipv" path="res://assets/resources/visuals/basic_capule_mesh.tscn" id="2_33180"]
+[ext_resource type="PackedScene" uid="uid://cfxot8vk3hipv" path="res://assets/resources/visuals/mesh/basic_capule_mesh.tscn" id="2_33180"]
 
-[node name="ThirdPersonCharacter" type="CharacterBody3D" unique_id=1451104356 node_paths=PackedStringArray("collisionBody", "visuals")]
+[node name="ThirdPersonCharacter" type="CharacterBody3D" unique_id=1451104356 node_paths=PackedStringArray("collisionBody", "visuals", "animationTree")]
 script = ExtResource("1_xpvjh")
 collisionBody = NodePath("CollisionBody")
 visuals = NodePath("BasicCapsuleMesh")
+animationTree = NodePath("")
 
 [node name="CollisionBody" type="CollisionShape3D" parent="." unique_id=806756119]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
