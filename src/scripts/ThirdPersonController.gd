@@ -4,15 +4,17 @@ extends Node3D
 # Resources
 @export var config := ThirdPersonControllerConfig.new()
 
+# Nodes
 ## Starting view for character. Required if not using dynamic view discovery.
-@export var initialView: ViewInterface
+@export var initialView   : ViewInterface
+@export var characterBody : CharacterBody3D
 
 @onready var intentRealizationPipeline := IntentRealizationPipeline.new()
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-	intentRealizationPipeline.setup(config, initialView)
+	intentRealizationPipeline.setup(config, initialView, characterBody)
 
 func _input(event: InputEvent) -> void:
 	intentRealizationPipeline.notify(event)

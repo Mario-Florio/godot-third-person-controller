@@ -109,10 +109,11 @@ size = Vector3(2.3862305, 1, 5.7128906)
 [node name="ThirdPersonCharacter" parent="." unique_id=1363432022 node_paths=PackedStringArray("controller") instance=ExtResource("9_sxdnt")]
 controller = NodePath("ThirdPersonController")
 
-[node name="ThirdPersonController" type="Node3D" parent="ThirdPersonCharacter" unique_id=1347378441 node_paths=PackedStringArray("initialView")]
+[node name="ThirdPersonController" type="Node3D" parent="ThirdPersonCharacter" unique_id=1347378441 node_paths=PackedStringArray("initialView", "characterBody")]
 script = ExtResource("10_bxsth")
 config = SubResource("Resource_xftjw")
 initialView = NodePath("../../FollowCameraMount3D")
+characterBody = NodePath("..")
 
 [node name="FollowCameraMount3D" parent="." unique_id=484763819 node_paths=PackedStringArray("follow_target") instance=ExtResource("9_jbd4l")]
 follow_target = NodePath("../ThirdPersonCharacter")

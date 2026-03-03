@@ -23,8 +23,7 @@ func execute(
 			_flatten_direction(referenceBasis.global_transform().basis.x), # lateral
 			_flatten_direction(-referenceBasis.global_transform().basis.z) # forward direction (-z is forward)
 		).addPhysicalActorState(
-			# Hard-coded until Physical actor state provides motion states
-			_adaptMotionState("STILL")
+			_adaptMotionState(physicalActorState.motion_state())
 		)
 	)
 

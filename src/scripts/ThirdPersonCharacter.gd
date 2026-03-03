@@ -6,4 +6,4 @@ extends CharacterBody3D
 @export var controller: ThirdPersonController
 
 func _ready() -> void:
-	pass
+	controller.characterBody = self
