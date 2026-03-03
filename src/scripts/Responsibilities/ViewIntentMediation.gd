@@ -20,7 +20,15 @@ func execute(intentBearingInput: InputInterface.IntentBearingInput) -> void:
 	).addActiveView(canonicalView.activeView))
 
 func produce() -> ReferenceBasis:
-	return ReferenceBasis.new()
+	return ReferenceBasis.new(_viewManager)
 
 class ReferenceBasis extends RefCounted:
-	pass
+	var _global_transform: Transform3D
+	
+	func _init(viewManager: ViewManager) -> void:
+		var canonicalView := ViewManager.Snapshot.new(viewManager)
+		_global_transform = canonicalView.activeView.global_transform
+	
+	# Getters
+	func global_transform() -> Transform3D:
+		return _global_transform
