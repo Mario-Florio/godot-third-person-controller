@@ -1,0 +1,8 @@
+class_name ThirdPersonControllerConfig
+extends Resource
+
+@export var inputConfig      := InputConfig.new()
+@export var viewConfig       := ViewConfig.new()
+@export var locomotionConfig := LocomotionConfig.new()
+@export var motionConfig     := MotionConfig.new()
+@export var animationConfig  := AnimationConfig.new()
