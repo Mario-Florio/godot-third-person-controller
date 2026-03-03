@@ -7,6 +7,7 @@ var viewManager         : ViewManager
 var viewSemantics       : ViewSemantics
 var locomotionSemantics : LocomotionSemantics
 var motionAuthority     : MotionAuthority
+var animationHandler    : AnimationHandler
 
 # Responsibilities
 var inputInterface        : InputInterface
@@ -18,10 +19,11 @@ var presentationMediation : PresentationMediation
 func setup(
 	config: ThirdPersonControllerConfig,
 	initialView: ViewInterface,
-	characterBody: CharacterBody3D
+	characterBody: CharacterBody3D,
+	animationTree: AnimationTree
 ) -> void:
 	
-	_constructDomainControllers(config, characterBody)
+	_constructDomainControllers(config, characterBody, animationTree)
 	_constructResponsibilities()
 	_connectDomains()
 	
@@ -43,15 +45,21 @@ func run(delta: float) -> void:
 		referenceBasis,
 		realizationAuthority.produce()
 	)
+	var semanticIntent := intentResolution.produce()
 	
-	realizationAuthority.execute(delta, intentResolution.produce())
+	realizationAuthority.execute(delta, semanticIntent)
 	
-	presentationMediation.execute(realizationAuthority.produce())
+	presentationMediation.execute(
+		delta,
+		referenceBasis,
+		semanticIntent,
+		realizationAuthority.produce())
 
 # Utils
 func _constructDomainControllers(
 	config : ThirdPersonControllerConfig,
-	characterBody: CharacterBody3D
+	characterBody: CharacterBody3D,
+	animationTree: AnimationTree
 ) -> void:
 	
 	agentInputHandler = AgentInputHandler.new(config.inputConfig)
@@ -59,13 +67,16 @@ func _constructDomainControllers(
 	viewSemantics     = ViewSemantics.new(config.viewConfig)
 	locomotionSemantics = LocomotionSemantics.new(config.locomotionConfig)
 	motionAuthority = MotionAuthority.new(config.motionConfig, characterBody)
+	
+	if animationTree:
+		animationHandler = AnimationHandler.new(config.animationConfig, animationTree)
 
 func _constructResponsibilities() -> void:
 	inputInterface        = InputInterface.new(agentInputHandler)
 	viewIntentMediation   = ViewIntentMediation.new(viewManager, viewSemantics)
 	intentResolution      = IntentResolution.new(locomotionSemantics)
 	realizationAuthority  = RealizationAuthority.new(motionAuthority)
-	presentationMediation = PresentationMediation.new()
+	presentationMediation = PresentationMediation.new(animationHandler)
 
 func _connectDomains() -> void:
 	viewManager.connect("active_view_updated", viewSemantics.on_view_updated)

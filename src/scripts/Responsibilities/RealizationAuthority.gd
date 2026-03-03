@@ -26,14 +26,34 @@ func produce() -> PhysicalActorState:
 
 class PhysicalActorState extends RefCounted:
 	var _motion_state: StringName
+	var _global_transform: Transform3D
+	var _last_position: Vector3
+	var _max_horizontal_speed: float
+	var _speed: float
 	
 	func _init(motionAuthority: MotionAuthority) -> void:
 		var motionSnap := MotionAuthority.Snapshot.new(motionAuthority)
 		_motion_state = _convertMotionState(motionSnap.motion_state)
+		_global_transform = motionSnap.global_transform
+		_last_position = motionSnap.last_position
+		_max_horizontal_speed = motionSnap.max_horizontal_speed
+		_speed = motionSnap.speed
 	
 	# Getters
 	func motion_state() -> StringName:
 		return _motion_state
+	
+	func global_transform() -> Transform3D:
+		return _global_transform
+	
+	func last_position() -> Vector3:
+		return _last_position
+	
+	func max_horizontal_speed() -> float:
+		return _max_horizontal_speed
+	
+	func speed() -> float:
+		return _speed
 	
 	# Utils
 	func _convertMotionState(motionState: MotionAuthority.MotionState) -> StringName:
