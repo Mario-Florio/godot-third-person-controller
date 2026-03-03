@@ -20,8 +20,8 @@ func execute(
 			_deriveWorldState()
 		).addReferenceBasis(
 			_get_global_rotation_y(referenceBasis.global_transform()),
-			_flatten_direction(-referenceBasis.global_transform().basis.z), # forward direction (-z is forward)
-			_flatten_direction(referenceBasis.global_transform().basis.x)   # lateral
+			_flatten_direction(referenceBasis.global_transform().basis.x), # lateral
+			_flatten_direction(-referenceBasis.global_transform().basis.z) # forward direction (-z is forward)
 		).addPhysicalActorState(
 			# Hard-coded until Physical actor state provides motion states
 			_adaptMotionState("STILL")
