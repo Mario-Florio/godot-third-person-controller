@@ -27,7 +27,8 @@ class ReferenceBasis extends RefCounted:
 	
 	func _init(viewManager: ViewManager) -> void:
 		var canonicalView := ViewManager.Snapshot.new(viewManager)
-		_global_transform = canonicalView.activeView.global_transform
+		if canonicalView.activeView:
+			_global_transform = canonicalView.activeView.global_transform
 	
 	# Getters
 	func global_transform() -> Transform3D:
