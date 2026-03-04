@@ -6,7 +6,9 @@ extends CharacterBody3D
 @export var controller: ThirdPersonController
 @export var animationTree: AnimationTree
 
-func _ready() -> void:
+func _ready():
+	assert(controller != null)
+	
 	controller.characterBody = self
 	controller.animationTree = animationTree
 	
