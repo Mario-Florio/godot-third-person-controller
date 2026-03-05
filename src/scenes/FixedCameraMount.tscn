@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://dn1hbnnxc058t"]
+[gd_scene format=3 uid="uid://xpbosywp1hg3"]
 
-[ext_resource type="Script" uid="uid://dbx3c6h7fqy56" path="res://scripts/Nodes/ViewInterface/FixedCameraMount.gd" id="1_kf10i"]
-[ext_resource type="Script" path="res://scripts/Nodes/ViewArea/ViewArea.gd" id="2_5nu3v"]
+[ext_resource type="Script" uid="uid://6qifeek0xk30" path="res://scripts/Nodes/ViewInterface/FixedCameraMount.gd" id="1_kf10i"]
+[ext_resource type="Script" uid="uid://bwyajlrmc5ba6" path="res://scripts/Nodes/ViewArea/ViewArea.gd" id="2_5nu3v"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_kf10i"]
 
@@ -9,7 +9,6 @@
 script = ExtResource("1_kf10i")
 view = NodePath("Camera3D")
 viewArea = NodePath("ViewArea3D")
-metadata/_custom_type_script = "uid://dbx3c6h7fqy56"
 metadata/_edit_group_ = true
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=411175984]
@@ -18,7 +17,6 @@ metadata/_edit_group_ = true
 script = ExtResource("2_5nu3v")
 viewInterface = NodePath("..")
 viewPriority = 0
-metadata/_custom_type_script = "uid://bpg48ka3dpe1u"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ViewArea3D" unique_id=1459742995]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, -4.972748)
