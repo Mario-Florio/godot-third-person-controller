@@ -33,6 +33,8 @@ func execute(
 			physicalActorState.speed()
 		))
 
+func setAnimationHandler(animationHandler: AnimationHandler) -> void:
+	_animationHandler = animationHandler
 
 # Utils
 ## Determines current orientation of characters motion 

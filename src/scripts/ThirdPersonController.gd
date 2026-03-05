@@ -4,23 +4,37 @@ extends Node3D
 # Resources
 @export var config := ThirdPersonControllerConfig.new():
 	set(value):
+		if value == null: return
+		
 		config = value
 		_attempt_init()
 
 # Nodes
-## Starting view for character. Required if not using dynamic view discovery.
-@export var initialView   : ViewInterface:
+@export var characterBody: CharacterBody3D:
 	set(value):
-		initialView = value
-		_attempt_init()
-@export var characterBody : CharacterBody3D:
-	set(value):
+		if value == null: return
+		
 		characterBody = value
 		_attempt_init()
-@export var animationTree : AnimationTree:
+
+## Starting view for character. Required if not using dynamic view discovery.
+@export var initialView: ViewInterface:
 	set(value):
+		if value == null: return
+		
+		initialView = value
+		
+		if _initialized:
+			intentRealizationPipeline.setInitialView(initialView)
+
+@export var animationTree: AnimationTree:
+	set(value):
+		if value == null: return
+		
 		animationTree = value
-		_attempt_init()
+		
+		if _initialized:
+			intentRealizationPipeline.setAnimationHandler(config.animationConfig, animationTree)
 
 # Infrastructure
 var intentRealizationPipeline: IntentRealizationPipeline
@@ -43,15 +57,21 @@ func _physics_process(delta: float) -> void:
 # Utils
 func _attempt_init() -> void:
 	if _initialized: return
+	if config == null: return
 	if characterBody == null: return
 	
 	intentRealizationPipeline = IntentRealizationPipeline.new()
 	
 	intentRealizationPipeline.setup(
 		config,
-		initialView,
-		characterBody,
-		animationTree
+		characterBody
 	)
 	
 	_initialized = true
+	
+	# Optional Dependencies setup
+	if initialView != null:
+		initialView = initialView # Apply dependencies via setter
+	
+	if animationTree != null:
+		animationTree = animationTree # Apply dependencies via setter
