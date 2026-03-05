@@ -10,6 +10,7 @@ const MotionState       := LocomotionSemantics.MotionState
 const TemporalCharacter := MotionIntent.TemporalCharacter
 const HorizontalIntent  := MotionIntent.Horizontal
 const RotationalIntent  := MotionIntent.Rotational
+const VerticalIntent    := MotionIntent.Vertical
 
 ## A flag representing if character is currently bounded to canonical reference basis look direction.
 var bounded := false # "Is forward direction of character bounded to camera?"
@@ -44,7 +45,20 @@ class MOVE extends RefCounted:
 			direction
 		)
 
+## Authors a vertical motion intent to express discrete upward movement.
+class JUMP extends RefCounted:
+	static func express(acceleration: float) -> VerticalIntent:
+		return VerticalIntent.new(
+			0,
+			TemporalCharacter.IMPULSE,
+			acceleration
+		)
+
 # Utils
+# Utils
+func _JUMP_ENABLED() -> bool:
+	return _locomotionState.config.JUMP_ENABLED
+
 func _WHILE_STILL() -> bool:
 	return _locomotionState.config.WHILE_STILL
 

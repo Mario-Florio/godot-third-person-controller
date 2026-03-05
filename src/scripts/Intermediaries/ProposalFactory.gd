@@ -6,6 +6,7 @@ const TemporalCharacter := MotionIntent.TemporalCharacter
 const ForceApplication  := MotionAuthority.ForceApplication
 const HorizontalIntent  := MotionIntent.Horizontal
 const RotationalIntent  := MotionIntent.Rotational
+const VerticalIntent    := MotionIntent.Vertical
 
 func provideMotionProposals(motionIntents: ReadOnlyArray) -> Array[MotionProposal]:
 	var proposals: Array[MotionProposal]
@@ -28,6 +29,13 @@ func provideMotionProposals(motionIntents: ReadOnlyArray) -> Array[MotionProposa
 				application,
 				intent.read("magnitude"),
 				intent.read("direction")
+			))
+		
+		elif intent.unwrap() is VerticalIntent:
+			proposals.append(MotionProposal.Vertical.new(
+				intent.read("priority"),
+				application,
+				intent.read("magnitude")
 			))
 		
 		else: # intent is Rotational

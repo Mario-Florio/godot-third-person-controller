@@ -41,3 +41,7 @@ class Rotational extends MotionProposal:
 	
 	func submit(proposalAuthority: ProposalReviewer) -> void:
 		proposalAuthority.review_rotational(self)
+
+class Vertical extends MotionProposal:
+	func submit(proposalAuthority: ProposalReviewer) -> void:
+		proposalAuthority.review_vertical(self)
