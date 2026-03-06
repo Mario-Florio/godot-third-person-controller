@@ -30,6 +30,8 @@
       - [4.2.2 Architectural Observability](#422-architectural-observability)
       - [4.2.3 System Transparency \& Owndership](#423-system-transparency--owndership)
   - [5. Known Constraints \& Tradeoffs](#5-known-constraints--tradeoffs)
+    - [5.1 Input Mapping](#51-input-mapping)
+    - [5.2 Godot Engine Coupling](#52-godot-engine-coupling)
   - [6. Next Steps](#6-next-steps)
   - [Links](#links)
 
@@ -205,7 +207,12 @@ Architecture must be legible without hidden framework behavior. Users should be 
 * Encouraged source ownership
 
 ## 5. Known Constraints & Tradeoffs
-Deferred.
+
+### 5.1 Input Mapping
+The current release only contains pre-configured support for mouse & keyboard. While extended support is anticipated, current development is focused on establishing core controller mechanics.
+
+### 5.2 Godot Engine Coupling
+The current implementation does not utilize adapters between Godot Engine components (e.g., `CharacterBody3D`) and core logic. While not a major concern since this project targets the Godot runtime specifically, future iterations will consider proper isolation of core controller mechanics from unmanaged engine components.
 
 ## 6. Next Steps
 Deferred.
