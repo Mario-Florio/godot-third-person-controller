@@ -64,12 +64,24 @@ class DASH extends RefCounted:
 			direction
 		)
 
+## Authors a vertical motion intent to express continuous upward movement.
+class LIFT extends RefCounted:
+	static func express(speed: float) -> VerticalIntent:
+		return VerticalIntent.new(
+			0,
+			TemporalCharacter.CONTINUOUS,
+			speed
+		)
+
 # Utils
 func _JUMP_ENABLED() -> bool:
 	return _locomotionState.config.JUMP_ENABLED
 
 func _DASH_ENABLED() -> bool:
 	return _locomotionState.config.DASH_ENABLED
+
+func _LIFT_ENABLED() -> bool:
+	return _locomotionState.config.LIFT_ENABLED
 
 func _WHILE_STILL() -> bool:
 	return _locomotionState.config.WHILE_STILL

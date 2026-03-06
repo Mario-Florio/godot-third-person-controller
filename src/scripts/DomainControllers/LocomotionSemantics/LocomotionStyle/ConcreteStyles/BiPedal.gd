@@ -16,6 +16,10 @@ func author() -> Array[MotionIntent]:
 	if _locomotionState.dash and _DASH_ENABLED():
 		_authoredIntents.append(_author_dash())
 	
+	if _locomotionState.lift and _LIFT_ENABLED():
+		_authoredIntents.append(_author_lift())
+	
+	
 	return _authoredIntents
 
 # Utils
@@ -50,6 +54,11 @@ func _author_dash() -> HorizontalIntent:
 		accel_multiplier,
 		Vector2(move_dir.x, move_dir.z)
 	)
+
+func _author_lift() -> VerticalIntent:
+	var speed_multiplier := 1.0
+	
+	return LIFT.express(speed_multiplier)
 
 func _is_bounded() -> void:
 	match _locomotionState.motionState:

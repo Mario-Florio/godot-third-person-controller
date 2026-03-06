@@ -20,6 +20,7 @@ extends Resource
 # Semantic Action Toggles (used to enable SemanticAction; see SemanticAction.gd for implementation)
 @export var JUMP_ENABLED := true
 @export var DASH_ENABLED := true
+@export var LIFT_ENABLED := false
 
 @export_group("Speed Multipliers")
 # SPEED MULTIPLIERS (values representing percentages of MAX_HORIZONTAL_SPEED see Motion Domain below)
