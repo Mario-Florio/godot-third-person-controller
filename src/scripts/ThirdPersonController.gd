@@ -36,6 +36,15 @@ extends Node3D
 		if _initialized:
 			intentRealizationPipeline.setAnimationHandler(config.animationConfig, animationTree)
 
+@export var viewProbe: ViewArea:
+	set(value):
+		if value == null: return
+		
+		viewProbe = value
+		
+		if _initialized:
+			intentRealizationPipeline.setViewProbe(viewProbe)
+
 # Infrastructure
 var intentRealizationPipeline: IntentRealizationPipeline
 
@@ -75,3 +84,6 @@ func _attempt_init() -> void:
 	
 	if animationTree != null:
 		animationTree = animationTree # Apply dependencies via setter
+	
+	if viewProbe != null:
+		viewProbe = viewProbe # Apply dependencies via setter
