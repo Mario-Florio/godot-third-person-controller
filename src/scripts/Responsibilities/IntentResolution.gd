@@ -18,7 +18,9 @@ func execute(
 			intentBearingInput.focus(),
 			_adaptSpeedIntent(intentBearingInput.speed_intent()),
 			_deriveWorldState(),
-			intentBearingInput.jump()
+			intentBearingInput.jump(),
+			intentBearingInput.dash(),
+			intentBearingInput.lift()
 		).addReferenceBasis(
 			_get_global_rotation_y(referenceBasis.global_transform()),
 			_flatten_direction(referenceBasis.global_transform().basis.x), # lateral

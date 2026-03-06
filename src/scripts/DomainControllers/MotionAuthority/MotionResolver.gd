@@ -13,7 +13,7 @@ func _init(motionState: MotionAuthority.State) -> void:
 func resolve(delta: float) -> void:
 	_resolve_horizontal(delta)
 	_resolve_rotational()
-	_resolve_vertical()
+	_resolve_vertical(delta)
 
 # Utils
 func _accel_rate() -> float:
@@ -32,9 +32,11 @@ func _resolve_horizontal(delta: float) -> void:
 	
 	match horizontalProposal.application:
 		ForceApplication.IMPULSE:
-			pass
+			_horizontal_impulse(horizontalProposal.magnitude, horizontalProposal.planar_vector)
+		
 		ForceApplication.CONTINUOUS:
 			_horizontal_continuous(delta, horizontalProposal.magnitude, horizontalProposal.planar_vector)
+		
 		_:
 			assert(false, "Horizontal Proposal mismatch [MotionResolver._resolve_horizontal]")
 
@@ -52,15 +54,16 @@ func _resolve_rotational() -> void:
 		_:
 			assert(false, "Rotational Proposal mismatch [MotionResolver._resolve_rotational]")
 
-func _resolve_vertical() -> void:
+func _resolve_vertical(delta) -> void:
 	var verticalProposal: MotionProposal.Vertical = _motionState.verticalProposal
 	if verticalProposal == null: return
 	
 	match verticalProposal.application:
 		ForceApplication.IMPULSE:
 			_vertical_impulse(verticalProposal.magnitude)
+			
 		ForceApplication.CONTINUOUS:
-			pass
+			_vertical_continuous(delta, verticalProposal.magnitude)
 		_:
 			assert(false, "Vertical Proposal mismatch [MotionResolver._resolve_vertical]")
 
@@ -88,6 +91,15 @@ func _horizontal_continuous(delta: float, magnitude: float, planar_vector: Vecto
 	motionTarget.velocity.x = parallel.x + lateral.x
 	motionTarget.velocity.z = parallel.y + lateral.y
 
+func _horizontal_impulse(magnitude: float, planar_vector: Vector2) -> void:
+	var motionTarget := _motionState.motionTarget
+	
+	motionTarget.velocity.x += (planar_vector.x *
+		(magnitude * _motionState.config.MAX_HORIZONTAL_IMPULSE_VELOCITY))
+	
+	motionTarget.velocity.z += (planar_vector.y *
+		(magnitude * _motionState.config.MAX_HORIZONTAL_IMPULSE_VELOCITY))
+
 func _rotational_impulse(yaw: float) -> void:
 	var current_yaw = _motionState.motionTarget.rotation.y
 	var target_yaw  = yaw
@@ -99,6 +111,18 @@ func _rotational_impulse(yaw: float) -> void:
 	current_yaw += delta * _rotational_weight()
 
 	_motionState.motionTarget.rotation.y = current_yaw
+
+func _vertical_continuous(delta: float, magnitude: float) -> void:
+	var motionTarget := _motionState.motionTarget
+	
+	var target_vertical_velocity := _motionState.config.MAX_VERTICAL_CONTINUOUS_VELOCITY * magnitude
+	var delta_velocity_cap := _motionState.config.vertical_responsiveness * 25.00 * delta
+	
+	motionTarget.velocity.y = move_toward(
+		motionTarget.velocity.y,
+		target_vertical_velocity,
+		delta_velocity_cap
+	)
 
 func _vertical_impulse(magnitude: float) -> void:
 	_motionState.motionTarget.velocity.y += (magnitude * _motionState.config.MAX_VERTICAL_IMPULSE_VELOCITY)

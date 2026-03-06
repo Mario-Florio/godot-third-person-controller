@@ -17,6 +17,8 @@ class State extends RefCounted:
 	var speedTier   := SpeedTier.NORMAL
 	var worldState  := WorldState.ENGAGED
 	var jump        := false
+	var dash        := false
+	var lift        := false
 	
 	# Reference Basis
 	var view_rotation_y  := 0.0
@@ -56,6 +58,8 @@ func _update_state(payload: Payload) -> void:
 	_locomotionState.speedTier = payload.speedTier
 	_locomotionState.worldState = payload.worldState
 	_locomotionState.jump = payload.jump
+	_locomotionState.dash = payload.dash
+	_locomotionState.lift = payload.lift
 	
 	# Reference Basis
 	_locomotionState.view_rotation_y = payload.view_rotation_y
@@ -108,6 +112,8 @@ class Payload extends RefCounted:
 	var speedTier: SpeedTier
 	var worldState: WorldState
 	var jump: bool
+	var dash: bool
+	var lift: bool
 	
 	# Reference Basis
 	var view_rotation_y: float
@@ -122,7 +128,9 @@ class Payload extends RefCounted:
 		_is_focused: bool,
 		_speedTier: SpeedTier,
 		_worldState: WorldState,
-		_jump: bool
+		_jump: bool,
+		_dash: bool,
+		_lift: bool
 	) -> Payload:
 		
 		move_vector = _move_vector
@@ -130,6 +138,8 @@ class Payload extends RefCounted:
 		speedTier = _speedTier
 		worldState = _worldState
 		jump = _jump
+		dash = _dash
+		lift = _lift
 		
 		return self
 	
