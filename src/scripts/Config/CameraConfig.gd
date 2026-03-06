@@ -16,3 +16,5 @@ extends Resource
 
 ## Vertical camera offset from character.
 @export_range(0.0, 1.0) var DEFAULT_SPRING_ARM_POSITION_Y := 0.00
+
+@export_range(0.1, 1.0) var FOLLOW_RATE := 1.0
