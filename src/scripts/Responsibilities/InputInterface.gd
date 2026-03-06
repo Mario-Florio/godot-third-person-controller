@@ -2,6 +2,7 @@ class_name InputInterface
 extends RefCounted
 
 var _agentInputHandler: AgentInputHandler
+var _viewProbe: ViewProbe
 
 func _init(agentInputHandler) -> void:
 	_agentInputHandler = agentInputHandler
@@ -11,6 +12,9 @@ func execute() -> void:
 
 func produce() -> IntentBearingInput:
 	return IntentBearingInput.new(_agentInputHandler)
+
+func setViewProbe(viewProbe: ViewProbe) -> void:
+	_viewProbe = viewProbe
 
 class IntentBearingInput extends RefCounted:
 	# AgentInputHandler Snapshot

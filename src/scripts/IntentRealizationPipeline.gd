@@ -8,6 +8,7 @@ var viewSemantics       : ViewSemantics
 var locomotionSemantics : LocomotionSemantics
 var motionAuthority     : MotionAuthority
 var animationHandler    : AnimationHandler
+var viewProbe           : ViewProbe
 
 # Responsibilities
 var inputInterface        : InputInterface
@@ -44,6 +45,19 @@ func setAnimationHandler(animationConfig: AnimationConfig, animationTree: Animat
 	else:
 		animationHandler = AnimationHandler.new(animationConfig, animationTree)
 		presentationMediation.setAnimationHandler(animationHandler)
+
+## Setter for view probe. Optional dependency; only required if using dynamic view discovery.
+## All optional dependencies must be set after core pipeline is setup.
+func setViewProbe(viewArea: ViewArea) -> void:
+	assert(viewArea != null, "View area not provided [IntentRealizationPipeline.setViewProbe]")
+	
+	if viewProbe:
+		viewProbe.setViewArea(viewArea)
+	
+	else:
+		viewProbe = ViewProbe.new(viewArea)
+		inputInterface.setViewProbe(viewProbe)
+		_connectViewProbe()
 
 func notify(event: InputEvent) -> void:
 	agentInputHandler.notify(event)
@@ -87,3 +101,9 @@ func _constructResponsibilities() -> void:
 
 func _connectDomains() -> void:
 	viewManager.connect("active_view_updated", viewSemantics.on_view_updated)
+
+func _connectViewProbe() -> void:
+	assert(viewProbe != null, "View Probe is not initialized [IntentRealizationPipeline._connectViewProbe]")
+	
+	viewProbe.connectHandler("view_discovered", viewManager.view_discovered)
+	viewProbe.connectHandler("view_lost", viewManager.view_lost)
