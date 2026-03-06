@@ -14,6 +14,7 @@ This project provides a configurable and extensible framework for basic third-pe
 
 For further information, see the following resources:
 
+* [***Setup Guide***](./docs/setup_guide/setup_guide.md) — A guide to help with installation and setup
 * [***Introduction***](./docs/design_doc/introduction.md) — A brief introduction to the projects purpose, scope, and approach
 * [***Architecture***](./docs/design_doc/architecture.md) — Arituculation of projects architecural model
 * [***System Design***](./docs/design_doc/system_design.md) — Technical breakdown of architecture and system-design
