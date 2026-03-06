@@ -34,3 +34,8 @@ class Rotational extends MotionIntent:
 	func _init(_priority: int, _temporality: TemporalCharacter, _magnitude: float, _yaw: float) -> void:
 		super(_priority, _temporality, _magnitude)
 		yaw = _yaw
+
+## Vertical implementation of MotionIntent.
+## Defines a vertical intent.
+class Vertical extends MotionIntent:
+	pass

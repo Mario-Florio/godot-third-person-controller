@@ -2,6 +2,7 @@ class_name InputInterface
 extends RefCounted
 
 var _agentInputHandler: AgentInputHandler
+var _viewProbe: ViewProbe
 
 func _init(agentInputHandler) -> void:
 	_agentInputHandler = agentInputHandler
@@ -12,6 +13,9 @@ func execute() -> void:
 func produce() -> IntentBearingInput:
 	return IntentBearingInput.new(_agentInputHandler)
 
+func setViewProbe(viewProbe: ViewProbe) -> void:
+	_viewProbe = viewProbe
+
 class IntentBearingInput extends RefCounted:
 	# AgentInputHandler Snapshot
 	var _look_delta: Vector2
@@ -19,6 +23,7 @@ class IntentBearingInput extends RefCounted:
 	var _swap_shoulder: bool
 	var _move_vector: Vector2
 	var _speed_intent: StringName
+	var _jump: bool
 	
 	func _init(agentInputHandler: AgentInputHandler) -> void:
 		var agentIntent := AgentInputHandler.Snapshot.new(agentInputHandler)
@@ -27,6 +32,7 @@ class IntentBearingInput extends RefCounted:
 		_swap_shoulder = agentIntent.swap_shoulder
 		_move_vector = agentIntent.move_vector
 		_speed_intent = _convertSpeedIntent(agentIntent.speed_intent)
+		_jump = agentIntent.jump
 	
 	# Getters
 	func look_delta() -> Vector2:
@@ -43,6 +49,9 @@ class IntentBearingInput extends RefCounted:
 	
 	func speed_intent() -> StringName:
 		return _speed_intent
+	
+	func jump() -> bool:
+		return _jump
 	
 	# Utils
 	func _convertSpeedIntent(val: AgentInputHandler.SpeedIntent) -> StringName:

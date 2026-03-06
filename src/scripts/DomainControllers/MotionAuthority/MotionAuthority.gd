@@ -17,10 +17,13 @@ class State extends RefCounted:
 	## Currently accepted Rotational Proposal.
 	## Ephemeral; must be reset every frame.
 	var rotationalProposal: MotionProposal.Rotational
+	## Currently accepted Vertical Proposal.
+	## Ephemeral; must be reset every frame.
+	var verticalProposal: MotionProposal.Vertical
 	
 	# Physical Actor State
-	var curr_motion_state := MotionState.STILL
-	var last_position     := Vector3.ZERO
+	var curr_motion_state         := MotionState.STILL
+	var last_position             := Vector3.ZERO
 	
 	func _init(_config: MotionConfig, _motionTarget: CharacterBody3D) -> void:
 		config = _config
@@ -66,6 +69,7 @@ func _update_state() -> void:
 	# Discard Proposals (from previous frame)
 	_motionState.horizontalProposal = null
 	_motionState.rotationalProposal = null
+	_motionState.verticalProposal = null
 	
 	# Update last_position
 	_motionState.last_position = _motionState.motionTarget.global_position

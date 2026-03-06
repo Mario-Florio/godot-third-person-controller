@@ -10,5 +10,3 @@ func enforce(delta: float) -> void:
 	# Apply non-negotiable invariants
 	if _motionState.curr_motion_state == MotionAuthority.MotionState.AIRBORNE:
 		_motionState.motionTarget.velocity += _motionState.motionTarget.get_gravity() * delta
-	
-	_motionState.motionTarget.apply_floor_snap()

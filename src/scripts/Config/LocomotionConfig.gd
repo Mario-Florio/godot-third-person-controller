@@ -16,6 +16,10 @@ extends Resource
 @export var WHILE_AIRBORNE    := false
 @export var WHILE_AIMING      := true
 
+@export_group("Semantic Actions")
+# Semantic Action Toggles (used to enable SemanticAction; see SemanticAction.gd for implementation)
+@export var JUMP_ENABLED := true
+
 @export_group("Speed Multipliers")
 # SPEED MULTIPLIERS (values representing percentages of MAX_HORIZONTAL_SPEED see Motion Domain below)
 

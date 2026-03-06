@@ -8,6 +8,7 @@ var viewSemantics       : ViewSemantics
 var locomotionSemantics : LocomotionSemantics
 var motionAuthority     : MotionAuthority
 var animationHandler    : AnimationHandler
+var viewProbe           : ViewProbe
 
 # Responsibilities
 var inputInterface        : InputInterface
@@ -16,19 +17,47 @@ var intentResolution      : IntentResolution
 var realizationAuthority  : RealizationAuthority
 var presentationMediation : PresentationMediation
 
-func setup(
-	config: ThirdPersonControllerConfig,
-	initialView: ViewInterface,
-	characterBody: CharacterBody3D,
-	animationTree: AnimationTree
-) -> void:
+## Core pipeline setup. All required dependencies must be met
+func setup(config: ThirdPersonControllerConfig, characterBody: CharacterBody3D) -> void:
+	assert(config != null, "Config must be provided at setup [IntentRealizationPipeline.setup]")
+	assert(characterBody != null, "Character body must be provided at setup [IntentRealizationPipeline.setup]")
 	
-	_constructDomainControllers(config, characterBody, animationTree)
+	_constructDomainControllers(config, characterBody)
 	_constructResponsibilities()
 	_connectDomains()
+
+## Setter for initial view. Optional dependency; only required if not using dynamic view discovery (e.g., ViewProbe).
+## All optional dependencies must be set after core pipeline is setup.
+func setInitialView(initialView: ViewInterface) -> void:
+	assert(initialView != null, "Initial view not provided [IntentRealizationPipeline.setInitialView]")
 	
-	if initialView:
-		viewManager.setInitialView(initialView)
+	viewManager.setInitialView(initialView)
+
+## Setter for animation handler. Optional dependency; only required if using animation tree.
+## All optional dependencies must be set after core pipeline is setup.
+func setAnimationHandler(animationConfig: AnimationConfig, animationTree: AnimationTree) -> void:
+	assert(animationConfig != null, "Animation config not provided [IntentRealizationPipeline.setAnimationHandler]")
+	assert(animationTree != null, "Animation tree not provided [IntentRealizationPipeline.setAnimationHandler]")
+	
+	if animationHandler:
+		animationHandler.setAnimationTree(animationTree)
+	
+	else:
+		animationHandler = AnimationHandler.new(animationConfig, animationTree)
+		presentationMediation.setAnimationHandler(animationHandler)
+
+## Setter for view probe. Optional dependency; only required if using dynamic view discovery.
+## All optional dependencies must be set after core pipeline is setup.
+func setViewProbe(viewArea: ViewArea) -> void:
+	assert(viewArea != null, "View area not provided [IntentRealizationPipeline.setViewProbe]")
+	
+	if viewProbe:
+		viewProbe.setViewArea(viewArea)
+	
+	else:
+		viewProbe = ViewProbe.new(viewArea)
+		inputInterface.setViewProbe(viewProbe)
+		_connectViewProbe()
 
 func notify(event: InputEvent) -> void:
 	agentInputHandler.notify(event)
@@ -56,20 +85,12 @@ func run(delta: float) -> void:
 		realizationAuthority.produce())
 
 # Utils
-func _constructDomainControllers(
-	config : ThirdPersonControllerConfig,
-	characterBody: CharacterBody3D,
-	animationTree: AnimationTree
-) -> void:
-	
-	agentInputHandler = AgentInputHandler.new(config.inputConfig)
-	viewManager       = ViewManager.new()
-	viewSemantics     = ViewSemantics.new(config.viewConfig)
+func _constructDomainControllers(config : ThirdPersonControllerConfig, characterBody: CharacterBody3D) -> void:
+	agentInputHandler   = AgentInputHandler.new(config.inputConfig)
+	viewManager         = ViewManager.new()
+	viewSemantics       = ViewSemantics.new(config.viewConfig)
 	locomotionSemantics = LocomotionSemantics.new(config.locomotionConfig)
-	motionAuthority = MotionAuthority.new(config.motionConfig, characterBody)
-	
-	if animationTree:
-		animationHandler = AnimationHandler.new(config.animationConfig, animationTree)
+	motionAuthority     = MotionAuthority.new(config.motionConfig, characterBody)
 
 func _constructResponsibilities() -> void:
 	inputInterface        = InputInterface.new(agentInputHandler)
@@ -80,3 +101,9 @@ func _constructResponsibilities() -> void:
 
 func _connectDomains() -> void:
 	viewManager.connect("active_view_updated", viewSemantics.on_view_updated)
+
+func _connectViewProbe() -> void:
+	assert(viewProbe != null, "View Probe is not initialized [IntentRealizationPipeline._connectViewProbe]")
+	
+	viewProbe.connectHandler("view_discovered", viewManager.view_discovered)
+	viewProbe.connectHandler("view_lost", viewManager.view_lost)

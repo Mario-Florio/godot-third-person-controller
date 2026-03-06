@@ -12,6 +12,7 @@ var _focus: bool
 var _swap_shoulder: bool
 var _move_vector: Vector2        # Desired movement on ground plane
 var _speed_intent: SpeedIntent
+var _jump: bool
 
 func _init(config: InputConfig) -> void:
 	_config = config
@@ -32,12 +33,14 @@ func export(snapshot: Snapshot) -> void:
 	snapshot.swap_shoulder = _swap_shoulder
 	snapshot.move_vector = _move_vector
 	snapshot.speed_intent = _speed_intent
+	snapshot.jump = _jump
 
 # Utils
 func _reset_state() -> void: # Resets ephemeral state so stale intent isn't reused if not updated on resolve
 	_look_delta = _look_delta_pending
 	_look_delta_pending = Vector2.ZERO
 	_swap_shoulder = false
+	_jump = false
 
 func _resolve_intent() -> void:
 	# Resolve focus intent
@@ -57,6 +60,9 @@ func _resolve_intent() -> void:
 		_speed_intent = SpeedIntent.SLOW
 	else:
 		_speed_intent = SpeedIntent.NORMAL
+	
+	# Resolve jump intent
+	if Input.is_action_just_pressed(_config.Actions.JUMP): _jump = true
 
 func _init_input_map(actions: Array) -> void:
 	for action_name in actions:
@@ -102,6 +108,11 @@ func _init_input_map(actions: Array) -> void:
 				var key_event := InputEventKey.new()
 				key_event.physical_keycode = _config.slow_down_key
 				_map_event_to_action(action_name, key_event)
+			
+			_config.Actions.JUMP:
+				var key_event := InputEventKey.new()
+				key_event.physical_keycode = _config.jump_key
+				_map_event_to_action(action_name, key_event)
 
 func _ensure_action(action_name: String):
 	if not InputMap.has_action(action_name):
@@ -123,6 +134,7 @@ class Snapshot extends RefCounted:
 	var swap_shoulder: bool
 	var move_vector: Vector2
 	var speed_intent: SpeedIntent
+	var jump: bool
 	
 	func _init(agentInputHandler: AgentInputHandler) -> void:
 		agentInputHandler.export(self)

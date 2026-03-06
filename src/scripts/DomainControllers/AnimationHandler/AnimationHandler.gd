@@ -21,6 +21,9 @@ func execute(payload: AnimationHandler.Payload) -> void:
 	_update_state(payload)
 	_animationTreeManager.manage(payload)
 
+func setAnimationTree(animationTree: AnimationTree) -> void:
+	_animationTreeManager.setAnimationTree(animationTree)
+
 # Utils
 func _update_state(payload: AnimationHandler.Payload) -> void:
 	match payload.motionState:

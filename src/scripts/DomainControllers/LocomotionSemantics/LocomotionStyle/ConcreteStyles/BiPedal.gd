@@ -10,6 +10,9 @@ func author() -> Array[MotionIntent]:
 	
 	_authoredIntents.append(_author_move())
 	
+	if _locomotionState.jump and _JUMP_ENABLED():
+		_authoredIntents.append(_author_jump())
+	
 	return _authoredIntents
 
 # Utils
@@ -31,6 +34,10 @@ func _author_move() -> HorizontalIntent:
 		_locomotionState.speed_multiplier,
 		Vector2(move_dir.x, move_dir.z)
 	)
+
+func _author_jump() -> VerticalIntent:
+	var accel_multiplier := 1.0
+	return JUMP.express(accel_multiplier)
 
 func _is_bounded() -> void:
 	match _locomotionState.motionState:

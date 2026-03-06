@@ -5,10 +5,14 @@ extends CharacterBody3D
 @export var visuals: Node3D
 @export var controller: ThirdPersonController
 @export var animationTree: AnimationTree
+@export var viewProbe: ViewArea
 
-func _ready() -> void:
+func _ready():
+	assert(controller != null)
+	
 	controller.characterBody = self
 	controller.animationTree = animationTree
+	controller.viewProbe = viewProbe
 	
 	if animationTree:
 		controller.config.animationConfig.is_grounded_path = (

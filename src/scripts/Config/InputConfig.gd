@@ -14,7 +14,8 @@ const Actions := {
 	"LEFT": "left",
 	"RIGHT": "right",
 	"SPEED_UP": "speed_up",
-	"SLOW_DOWN": "slow_down"
+	"SLOW_DOWN": "slow_down",
+	"JUMP": "jump"
 }
 
 # Default bindings
@@ -26,3 +27,4 @@ const Actions := {
 @export var right_key: Key = KEY_D
 @export var speed_up_key: Key = KEY_SHIFT
 @export var slow_down_key: Key = KEY_CTRL
+@export var jump_key: Key = KEY_SPACE
