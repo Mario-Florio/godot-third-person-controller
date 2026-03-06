@@ -6,10 +6,10 @@ extends Resource
 
 @export_group("Follow Camera")
 ## Default view distance from character.
-@export_range(0.8, 5.0) var DEFAULT_SPRING_ARM_LENGTH := 1.50
+@export_range(0.0, 5.0) var DEFAULT_SPRING_ARM_LENGTH := 1.50
 
 ## Focused view distance from character.
-@export_range(0.8, 5.0) var FOCUSED_SPRING_ARM_LENGTH := 0.80
+@export_range(0.0, 5.0) var FOCUSED_SPRING_ARM_LENGTH := 0.80
 
 ## Horizontal camera offset from character.
 @export_range(-2.0, 2.0) var DEFAULT_SPRING_ARM_POSITION_X := 0.00
