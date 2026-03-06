@@ -32,9 +32,11 @@ func _resolve_horizontal(delta: float) -> void:
 	
 	match horizontalProposal.application:
 		ForceApplication.IMPULSE:
-			pass
+			_horizontal_impulse(horizontalProposal.magnitude, horizontalProposal.planar_vector)
+		
 		ForceApplication.CONTINUOUS:
 			_horizontal_continuous(delta, horizontalProposal.magnitude, horizontalProposal.planar_vector)
+		
 		_:
 			assert(false, "Horizontal Proposal mismatch [MotionResolver._resolve_horizontal]")
 
@@ -87,6 +89,15 @@ func _horizontal_continuous(delta: float, magnitude: float, planar_vector: Vecto
 	
 	motionTarget.velocity.x = parallel.x + lateral.x
 	motionTarget.velocity.z = parallel.y + lateral.y
+
+func _horizontal_impulse(magnitude: float, planar_vector: Vector2) -> void:
+	var motionTarget := _motionState.motionTarget
+	
+	motionTarget.velocity.x += (planar_vector.x *
+		(magnitude * _motionState.config.MAX_HORIZONTAL_IMPULSE_VELOCITY))
+	
+	motionTarget.velocity.z += (planar_vector.y *
+		(magnitude * _motionState.config.MAX_HORIZONTAL_IMPULSE_VELOCITY))
 
 func _rotational_impulse(yaw: float) -> void:
 	var current_yaw = _motionState.motionTarget.rotation.y

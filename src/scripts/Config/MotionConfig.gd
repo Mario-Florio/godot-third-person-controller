@@ -26,8 +26,9 @@ extends Resource
 
 # Constants
 @export_group("Constants")
-@export var MAX_HORIZONTAL_SPEED          := 4.50
-@export var MAX_VERTICAL_IMPULSE_VELOCITY := 3.50
+@export var MAX_HORIZONTAL_SPEED            := 4.50
+@export var MAX_VERTICAL_IMPULSE_VELOCITY   := 3.50
+@export var MAX_HORIZONTAL_IMPULSE_VELOCITY := 7.00
 
 # Rules
 @export_group("Rules")
