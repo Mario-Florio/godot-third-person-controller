@@ -24,6 +24,7 @@ class IntentBearingInput extends RefCounted:
 	var _move_vector: Vector2
 	var _speed_intent: StringName
 	var _jump: bool
+	var _dash: bool
 	
 	func _init(agentInputHandler: AgentInputHandler) -> void:
 		var agentIntent := AgentInputHandler.Snapshot.new(agentInputHandler)
@@ -33,6 +34,7 @@ class IntentBearingInput extends RefCounted:
 		_move_vector = agentIntent.move_vector
 		_speed_intent = _convertSpeedIntent(agentIntent.speed_intent)
 		_jump = agentIntent.jump
+		_dash = agentIntent.dash
 	
 	# Getters
 	func look_delta() -> Vector2:
@@ -52,6 +54,9 @@ class IntentBearingInput extends RefCounted:
 	
 	func jump() -> bool:
 		return _jump
+	
+	func dash() -> bool:
+		return _dash
 	
 	# Utils
 	func _convertSpeedIntent(val: AgentInputHandler.SpeedIntent) -> StringName:
