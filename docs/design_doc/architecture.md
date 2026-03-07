@@ -147,7 +147,8 @@ Data flows through responsibilities. Responsibilities consume data to derive mut
 
 ```
 (Control-relevant signals)          (Prev cycle:
-            v                           Physical actor state)
+            |                           Physical actor state)
+            v
 +-----------------------------+                 |
 |       Input Interface       |                 |
 +-----------------------------+                 |
@@ -169,10 +170,12 @@ Data flows through responsibilities. Responsibilities consume data to derive mut
             |       |   +------------------------------+
             +-------+-->|    Realization Authority     |
                         +------------------------------+
+                                       |
+                                       v
                             (Physical actor state)
 ```
 
->Note: Implementation is subject to change. The above model represents a possible instantiation of the pipelines data flow which happens to currently be in use. Future iterations are not bound to this model. For an abstract, implementation agnostic model, see [section 5.2](#52-intent---realization-pipeline).
+>Note: Implementation is subject to change. The above model represents a possible instantiation of the pipelines data flow. Future iterations are not bound to this model. For an abstract, implementation agnostic model, see [section 5.2](#52-intent---realization-pipeline).
 
 #### 4.3.1 Intent-Bearing Input
 
