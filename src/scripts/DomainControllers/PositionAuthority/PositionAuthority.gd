@@ -14,8 +14,8 @@ func _init(config: PositionConfig, collisionBody: CollisionShape3D) -> void:
 func execute() -> void:
 	pass
 
-func export(snapshot: Snapshot) -> void:
-	snapshot.pivot_offset = _config.PIVOT_OFFSET
+func export() -> void:
+	pass
 
 func setCollisionBody(collisionBody: CollisionShape3D) -> void:
 	_collisionBody = collisionBody
@@ -25,9 +25,3 @@ func on_pivot_offset_updated(pivot_offset: float) -> void:
 
 func connectConfigHandler(signalName: StringName, handler: Callable) -> void:
 	_config.connectHandler(signalName, handler)
-
-class Snapshot extends RefCounted:
-	var pivot_offset: float
-	
-	func _init(positionAuthority: PositionAuthority) -> void:
-		positionAuthority.export(self)
