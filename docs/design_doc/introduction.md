@@ -28,7 +28,7 @@
     - [4.2 Constraint Principles](#42-constraint-principles)
       - [4.2.1 Performance](#421-performance)
       - [4.2.2 Architectural Observability](#422-architectural-observability)
-      - [4.2.3 System Transparency \& Owndership](#423-system-transparency--owndership)
+      - [4.2.3 System Transparency \& Ownership](#423-system-transparency--ownership)
   - [5. Known Constraints \& Tradeoffs](#5-known-constraints--tradeoffs)
     - [5.1 Input Mapping](#51-input-mapping)
     - [5.2 Godot Engine Coupling](#52-godot-engine-coupling)
@@ -91,7 +91,7 @@ This section defines the functional and architectural boundaries of the version 
 ### 3.1 In-Scope
 
 #### 3.1.1 Core Control Mechanics
-Core controller mechanics form the foundation of all adjunct features. Without this foundation there is no controller. These core mechanics can be understood through the foundational responsiblities that make up the intent -> realization pipeline:
+Core controller mechanics form the foundation of all adjunct features. Without this foundation there is no controller. These core mechanics can be understood through the foundational responsiblities that make up the *intent -> realization pipeline*:
 
 * Input Interface
 * View-Intent Mediation
@@ -198,7 +198,7 @@ Intermediate states and state transitions must be discrete and inspectable witho
 * Explicit intermediate states
 * Non-invasive inspection capability
 
-#### 4.2.3 System Transparency & Owndership
+#### 4.2.3 System Transparency & Ownership
 Architecture must be legible without hidden framework behavior. Users should be able to trace control flow and responsibility boundaries directly from source. Modification and forking are anticipated use cases.
 
 **Key Properties:**
