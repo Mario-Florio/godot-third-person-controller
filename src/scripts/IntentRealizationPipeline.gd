@@ -9,6 +9,7 @@ var locomotionSemantics : LocomotionSemantics
 var motionAuthority     : MotionAuthority
 var animationHandler    : AnimationHandler
 var viewProbe           : ViewProbe
+var positionAuthority   : PositionAuthority
 
 # Responsibilities
 var inputInterface        : InputInterface
@@ -58,6 +59,29 @@ func setViewProbe(viewArea: ViewArea) -> void:
 		viewProbe = ViewProbe.new(viewArea)
 		inputInterface.setViewProbe(viewProbe)
 		_connectViewProbe()
+
+## Setter for visuals. Optional dependency.
+## All optional dependencies must be set after core pipeline is setup.
+func setVisuals(visuals: Node3D, pivot_offset: float) -> void:
+	assert(visuals != null, "Visuals not provided [IntentRealizationPipeline.setVisuals]")
+	
+	presentationMediation.setVisuals(visuals)
+	if pivot_offset:
+		presentationMediation.align_visual_pivot_offset(pivot_offset)
+
+## Setter for position authority. Optional dependency; only required if want to configure collision body position.
+## All optional dependencies must be set after core pipeline is setup.
+func setPositionAuthority(positionConfig: PositionConfig, collisionBody: CollisionShape3D) -> void:
+	assert(positionConfig != null, "Position config not provided [IntentRealizationPipeline.setPositionAuthority]")
+	assert(collisionBody != null, "Collision body not provided [IntentRealizationPipeline.setPositionAuthority]")
+	
+	if positionAuthority:
+		positionAuthority.setCollisionBody(collisionBody)
+	
+	else:
+		positionAuthority = PositionAuthority.new(positionConfig, collisionBody)
+		realizationAuthority.setPositionAuthority(positionAuthority)
+		positionAuthority.connectConfigHandler("pivot_offset_updated", presentationMediation.align_visual_pivot_offset)
 
 func notify(event: InputEvent) -> void:
 	agentInputHandler.notify(event)
