@@ -6,3 +6,4 @@ extends Resource
 @export var locomotionConfig := LocomotionConfig.new()
 @export var motionConfig     := MotionConfig.new()
 @export var animationConfig  := AnimationConfig.new()
+@export var positionConfig   := PositionConfig.new()

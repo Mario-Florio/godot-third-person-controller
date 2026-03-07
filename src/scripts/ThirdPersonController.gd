@@ -52,7 +52,16 @@ extends Node3D
 		visuals = value
 		
 		if _initialized:
-			intentRealizationPipeline.setVisuals(visuals)
+			intentRealizationPipeline.setVisuals(visuals, _get_pivot_offset())
+
+@export var collisionBody: CollisionShape3D:
+	set(value):
+		if value == null: return
+		
+		collisionBody = value
+		
+		if _initialized:
+			intentRealizationPipeline.setPositionAuthority(config.positionConfig, collisionBody)
 
 # Infrastructure
 var intentRealizationPipeline: IntentRealizationPipeline
@@ -99,3 +108,13 @@ func _attempt_init() -> void:
 	
 	if visuals != null:
 		visuals = visuals # Apply dependencies via setter
+	
+	if collisionBody != null:
+		collisionBody = collisionBody # Apply dependencies via setter
+
+func _get_pivot_offset() -> float:
+	if config == null: return 0.0
+	if config.positionConfig == null: return 0.0
+	if config.positionConfig.PIVOT_OFFSET == null: return 0.0
+
+	return config.positionConfig.PIVOT_OFFSET

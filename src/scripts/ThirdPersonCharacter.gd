@@ -14,6 +14,7 @@ func _ready():
 	controller.animationTree = animationTree
 	controller.viewProbe = viewProbe
 	controller.visuals = visuals
+	controller.collisionBody = collisionBody
 	
 	if animationTree:
 		controller.config.animationConfig.is_grounded_path = (
