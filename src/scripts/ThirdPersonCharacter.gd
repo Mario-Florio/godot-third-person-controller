@@ -13,6 +13,7 @@ func _ready():
 	controller.characterBody = self
 	controller.animationTree = animationTree
 	controller.viewProbe = viewProbe
+	controller.visuals = visuals
 	
 	if animationTree:
 		controller.config.animationConfig.is_grounded_path = (

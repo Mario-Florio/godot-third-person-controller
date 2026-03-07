@@ -2,6 +2,7 @@ class_name PresentationMediation
 extends RefCounted
 
 var _animationHandler: AnimationHandler
+var _visuals: Node3D
 
 func _init(animationHandler: AnimationHandler) -> void:
 	_animationHandler = animationHandler
@@ -35,6 +36,9 @@ func execute(
 
 func setAnimationHandler(animationHandler: AnimationHandler) -> void:
 	_animationHandler = animationHandler
+
+func setVisuals(visuals: Node3D) -> void:
+	_visuals = visuals
 
 # Utils
 ## Determines current orientation of characters motion 

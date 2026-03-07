@@ -59,6 +59,13 @@ func setViewProbe(viewArea: ViewArea) -> void:
 		inputInterface.setViewProbe(viewProbe)
 		_connectViewProbe()
 
+## Setter for visuals. Optional dependency.
+## All optional dependencies must be set after core pipeline is setup.
+func setVisuals(visuals: Node3D) -> void:
+	assert(visuals != null, "Visuals not provided [IntentRealizationPipeline.setVisuals]")
+	
+	presentationMediation.setVisuals(visuals)
+
 func notify(event: InputEvent) -> void:
 	agentInputHandler.notify(event)
 

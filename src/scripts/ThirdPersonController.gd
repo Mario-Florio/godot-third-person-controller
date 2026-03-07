@@ -45,6 +45,15 @@ extends Node3D
 		if _initialized:
 			intentRealizationPipeline.setViewProbe(viewProbe)
 
+@export var visuals: Node3D:
+	set(value):
+		if value == null: return
+		
+		visuals = value
+		
+		if _initialized:
+			intentRealizationPipeline.setVisuals(visuals)
+
 # Infrastructure
 var intentRealizationPipeline: IntentRealizationPipeline
 
@@ -87,3 +96,6 @@ func _attempt_init() -> void:
 	
 	if viewProbe != null:
 		viewProbe = viewProbe # Apply dependencies via setter
+	
+	if visuals != null:
+		visuals = visuals # Apply dependencies via setter
