@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="CameraConfig" format=3 uid="uid://sehxxpl8hrqy"]
+
+[ext_resource type="Script" uid="uid://d0gh5vkk6hatw" path="res://scripts/Config/CameraConfig.gd" id="1_dwuip"]
+
+[resource]
+script = ExtResource("1_dwuip")
+FOLLOW_RATE = 0.2
+metadata/_custom_type_script = "uid://d0gh5vkk6hatw"
