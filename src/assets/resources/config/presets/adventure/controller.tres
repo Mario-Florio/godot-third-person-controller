@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="ThirdPersonControllerConfig" format=3 uid="uid://dh6hnw3tmupw6"]
+
+[ext_resource type="Script" uid="uid://xjiurgjxm420" path="res://scripts/Config/LocomotionConfig.gd" id="1_6hn6t"]
+[ext_resource type="Script" uid="uid://dt1vohvibk4cs" path="res://scripts/Config/MotionConfig.gd" id="2_2p4sm"]
+[ext_resource type="Script" uid="uid://b7jjc4hn8i2uy" path="res://scripts/Config/PositionConfig.gd" id="3_e4re3"]
+[ext_resource type="Script" uid="uid://qtt5t44l0u7f" path="res://scripts/Config/ThirdPersonControllerConfig.gd" id="4_nq6ak"]
+
+[sub_resource type="Resource" id="Resource_8bdjt"]
+script = ExtResource("1_6hn6t")
+metadata/_custom_type_script = "uid://xjiurgjxm420"
+
+[sub_resource type="Resource" id="Resource_wnywe"]
+script = ExtResource("2_2p4sm")
+rotational_responsiveness = 0.5
+metadata/_custom_type_script = "uid://dt1vohvibk4cs"
+
+[sub_resource type="Resource" id="Resource_1of5j"]
+script = ExtResource("3_e4re3")
+PIVOT_OFFSET = 0.5
+metadata/_custom_type_script = "uid://b7jjc4hn8i2uy"
+
+[resource]
+script = ExtResource("4_nq6ak")
+locomotionConfig = SubResource("Resource_8bdjt")
+motionConfig = SubResource("Resource_wnywe")
+positionConfig = SubResource("Resource_1of5j")
+metadata/_custom_type_script = "uid://qtt5t44l0u7f"
