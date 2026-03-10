@@ -9,7 +9,7 @@ const RotationalIntent  := MotionIntent.Rotational
 const VerticalIntent    := MotionIntent.Vertical
 
 func provideMotionProposals(motionIntents: ReadOnlyArray) -> Array[MotionProposal]:
-	var proposals: Array[MotionProposal]
+	var proposals: Array[MotionProposal] = []
 	for i in range(motionIntents.size()):
 		var intent: ReadOnlyMap = motionIntents.read(i)
 		if intent == null: continue

@@ -13,6 +13,7 @@ viewArea = NodePath("ViewArea3D")
 metadata/_edit_group_ = true
 
 [node name="SpringArm3D" type="SpringArm3D" parent="." unique_id=336704811]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.45722055)
 
 [node name="Camera3D" type="Camera3D" parent="SpringArm3D" unique_id=1488255779]
 

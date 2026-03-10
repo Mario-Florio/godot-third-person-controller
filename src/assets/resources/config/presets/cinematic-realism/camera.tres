@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CameraConfig" format=3 uid="uid://mam1c4egexif"]
+
+[ext_resource type="Script" uid="uid://d0gh5vkk6hatw" path="res://scripts/Config/CameraConfig.gd" id="1_kl0dj"]
+
+[resource]
+script = ExtResource("1_kl0dj")
+DEFAULT_SPRING_ARM_LENGTH = 0.6
+FOCUSED_SPRING_ARM_LENGTH = 0.2
+DEFAULT_SPRING_ARM_POSITION_X = 0.7000000000000002
+FOLLOW_RATE = 0.30000000000000004
+metadata/_custom_type_script = "uid://d0gh5vkk6hatw"

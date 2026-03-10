@@ -45,7 +45,7 @@ func set_is_flipped(is_flipped) -> void:
 
 # Utils
 func _anchor_to_target(target_position) -> void:
-	global_position = target_position
+	global_position = lerp(global_position, target_position, config.FOLLOW_RATE)
 
 func _adjust_spring_length(length: float) -> void:
 	spring_arm.spring_length = lerp(spring_arm.spring_length, length, 0.2)

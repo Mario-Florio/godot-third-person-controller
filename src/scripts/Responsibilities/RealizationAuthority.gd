@@ -2,6 +2,7 @@ class_name RealizationAuthority
 extends RefCounted
 
 var _motionAuthority: MotionAuthority
+var _positionAuthority: PositionAuthority
 
 # Intermediaries / Adapters
 var _proposalFactory := ProposalFactory.new()
@@ -20,11 +21,18 @@ func execute(
 			_proposalFactory.provideMotionProposals(semanticIntent.intents())
 		)
 	)
+	
+	if _positionAuthority:
+		_positionAuthority.execute()
 
 func produce() -> PhysicalActorState:
 	return PhysicalActorState.new(_motionAuthority)
 
+func setPositionAuthority(positionAuthority: PositionAuthority) -> void:
+	_positionAuthority = positionAuthority
+
 class PhysicalActorState extends RefCounted:
+	# Motion Snap
 	var _motion_state: StringName
 	var _global_transform: Transform3D
 	var _last_position: Vector3

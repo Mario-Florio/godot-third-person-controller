@@ -8,6 +8,10 @@ extends Resource
 @export_range(0.0, 1.0) var rotational_responsiveness := 0.70:
 	set(value): rotational_responsiveness = clamp(value, 0.1, 1.0)
 
+## Effects vertical continuous motion.
+@export_range(0.0, 1.0) var vertical_responsiveness := 0.70:
+	set(value): vertical_responsiveness = clamp(value, 0.1, 1.0)
+
 # Advanced Dials
 @export_group("Advanced Dials")
 ## Used alongside Turn Ratio to govern Horizontal Responsiveness.
@@ -26,8 +30,10 @@ extends Resource
 
 # Constants
 @export_group("Constants")
-@export var MAX_HORIZONTAL_SPEED          := 4.50
-@export var MAX_VERTICAL_IMPULSE_VELOCITY := 3.50
+@export var MAX_HORIZONTAL_SPEED             := 4.50
+@export var MAX_VERTICAL_IMPULSE_VELOCITY    := 3.50
+@export var MAX_HORIZONTAL_IMPULSE_VELOCITY  := 7.00
+@export var MAX_VERTICAL_CONTINUOUS_VELOCITY := 1.75
 
 # Rules
 @export_group("Rules")

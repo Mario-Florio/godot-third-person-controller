@@ -2,19 +2,19 @@
 
 [ext_resource type="Script" uid="uid://dm1p3xkcwtoux" path="res://scripts/ThirdPersonCharacter.gd" id="1_xpvjh"]
 [ext_resource type="Shape3D" uid="uid://cqlv1rd6jpci6" path="res://assets/resources/shape/basic_capsule.tres" id="2_0xybg"]
-[ext_resource type="PackedScene" uid="uid://cfxot8vk3hipv" path="res://assets/resources/visuals/mesh/basic_capule_mesh.tscn" id="2_33180"]
+[ext_resource type="PackedScene" uid="uid://dmspt8014ptoh" path="res://assets/resources/visuals/mesh/feminine_mesh.tscn" id="4_0xybg"]
 [ext_resource type="PackedScene" uid="uid://bfoliajq1ojx4" path="res://scenes/ViewProbe.tscn" id="4_giq0b"]
 
 [node name="ThirdPersonCharacter" type="CharacterBody3D" unique_id=1451104356 node_paths=PackedStringArray("collisionBody", "visuals", "viewProbe")]
 script = ExtResource("1_xpvjh")
 collisionBody = NodePath("CollisionBody")
-visuals = NodePath("BasicCapsuleMesh")
+visuals = NodePath("FeminineMesh")
 viewProbe = NodePath("ViewProbe")
 
 [node name="CollisionBody" type="CollisionShape3D" parent="." unique_id=806756119]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
 shape = ExtResource("2_0xybg")
 
-[node name="BasicCapsuleMesh" parent="." unique_id=605719630 instance=ExtResource("2_33180")]
-
 [node name="ViewProbe" parent="." unique_id=311700622 instance=ExtResource("4_giq0b")]
+
+[node name="FeminineMesh" parent="." unique_id=138852980 instance=ExtResource("4_0xybg")]

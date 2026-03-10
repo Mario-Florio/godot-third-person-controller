@@ -15,7 +15,9 @@ const Actions := {
 	"RIGHT": "right",
 	"SPEED_UP": "speed_up",
 	"SLOW_DOWN": "slow_down",
-	"JUMP": "jump"
+	"JUMP": "jump",
+	"DASH": "dash",
+	"LIFT": "lift"
 }
 
 # Default bindings
@@ -28,3 +30,5 @@ const Actions := {
 @export var speed_up_key: Key = KEY_SHIFT
 @export var slow_down_key: Key = KEY_CTRL
 @export var jump_key: Key = KEY_SPACE
+@export var dash_mouse_button: MouseButton = MOUSE_BUTTON_XBUTTON2
+@export var lift_key: Key = KEY_SPACE

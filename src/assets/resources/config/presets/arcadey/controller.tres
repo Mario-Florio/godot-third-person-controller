@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="ThirdPersonControllerConfig" format=3 uid="uid://cxny8xgbed4if"]
+
+[ext_resource type="Script" uid="uid://xjiurgjxm420" path="res://scripts/Config/LocomotionConfig.gd" id="1_dimeh"]
+[ext_resource type="Script" uid="uid://dt1vohvibk4cs" path="res://scripts/Config/MotionConfig.gd" id="2_rod7e"]
+[ext_resource type="Script" uid="uid://b7jjc4hn8i2uy" path="res://scripts/Config/PositionConfig.gd" id="3_ypash"]
+[ext_resource type="Script" uid="uid://qtt5t44l0u7f" path="res://scripts/Config/ThirdPersonControllerConfig.gd" id="4_clbtn"]
+
+[sub_resource type="Resource" id="Resource_wnywe"]
+script = ExtResource("1_dimeh")
+JUMP_ENABLED = false
+LIFT_ENABLED = true
+metadata/_custom_type_script = "uid://xjiurgjxm420"
+
+[sub_resource type="Resource" id="Resource_1of5j"]
+script = ExtResource("2_rod7e")
+horizontal_responsiveness = 1.0
+vertical_responsiveness = 1.0
+HORIZONTAL_AIRBORNE_INTENT_ALLOWED = true
+ROTATIONAL_AIRBORNE_INTENT_ALLOWED = true
+metadata/_custom_type_script = "uid://dt1vohvibk4cs"
+
+[sub_resource type="Resource" id="Resource_80npy"]
+script = ExtResource("3_ypash")
+PIVOT_OFFSET = 1.0
+metadata/_custom_type_script = "uid://b7jjc4hn8i2uy"
+
+[resource]
+script = ExtResource("4_clbtn")
+locomotionConfig = SubResource("Resource_wnywe")
+motionConfig = SubResource("Resource_1of5j")
+positionConfig = SubResource("Resource_80npy")
+metadata/_custom_type_script = "uid://qtt5t44l0u7f"

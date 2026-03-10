@@ -6,7 +6,7 @@ extends RefCounted
 # Using
 const ForceApplication := MotionAuthority.ForceApplication
 
-var priority    : float            # 0 being the highest
+var priority    : int              # 0 being the highest
 var application : ForceApplication # Represents application of force
 var magnitude   : float            # Represents actual force produced [0 - 1]
 
