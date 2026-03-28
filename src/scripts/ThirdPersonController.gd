@@ -30,11 +30,13 @@ extends Node3D
 @export var animationTree: AnimationTree:
 	set(value):
 		if value == null: return
+		if config == null: return
+		if config.ANIMATION_CONFIG == null: config.setAnimationConfig(AnimationConfig.new())
 		
 		animationTree = value
 		
 		if _initialized:
-			intentRealizationPipeline.setAnimationHandler(config.animationConfig, animationTree)
+			intentRealizationPipeline.setAnimationHandler(config.ANIMATION_CONFIG, animationTree)
 
 @export var viewProbe: ViewArea:
 	set(value):
@@ -57,11 +59,13 @@ extends Node3D
 @export var collisionBody: CollisionShape3D:
 	set(value):
 		if value == null: return
+		if config == null: return
+		if config.POSITION_CONFIG == null: config.setPositionConfig(PositionConfig.new())
 		
 		collisionBody = value
 		
 		if _initialized:
-			intentRealizationPipeline.setPositionAuthority(config.positionConfig, collisionBody)
+			intentRealizationPipeline.setPositionAuthority(config.POSITION_CONFIG, collisionBody)
 
 # Infrastructure
 var intentRealizationPipeline: IntentRealizationPipeline
@@ -73,6 +77,8 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if config == null:
 		config = ThirdPersonControllerConfig.new()
+	
+	config.setup()
 	
 	_node_ready = true
 
@@ -120,7 +126,7 @@ func _attempt_init() -> void:
 
 func _get_pivot_offset() -> float:
 	if config == null: return 0.0
-	if config.positionConfig == null: return 0.0
-	if config.positionConfig.PIVOT_OFFSET == null: return 0.0
+	if config.POSITION_CONFIG == null: return 0.0
+	if config.POSITION_CONFIG.PIVOT_OFFSET == null: return 0.0
 
-	return config.positionConfig.PIVOT_OFFSET
+	return config.POSITION_CONFIG.PIVOT_OFFSET
