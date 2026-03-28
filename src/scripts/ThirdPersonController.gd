@@ -2,7 +2,7 @@ class_name ThirdPersonController
 extends Node3D
 
 # Resources
-@export var config := ThirdPersonControllerConfig.new():
+@export var config: ThirdPersonControllerConfig:
 	set(value):
 		if value == null: return
 		
@@ -67,9 +67,14 @@ extends Node3D
 var intentRealizationPipeline: IntentRealizationPipeline
 
 var _initialized := false
+var _node_ready  := false
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if config == null:
+		config = ThirdPersonControllerConfig.new()
+	
+	_node_ready = true
 
 func _input(event: InputEvent) -> void:
 	if !_initialized: return
@@ -84,6 +89,7 @@ func _physics_process(delta: float) -> void:
 # Utils
 func _attempt_init() -> void:
 	if _initialized: return
+	if !_node_ready: return
 	if config == null: return
 	if characterBody == null: return
 	
