@@ -110,11 +110,11 @@ func run(delta: float) -> void:
 
 # Utils
 func _constructDomainControllers(config : ThirdPersonControllerConfig, characterBody: CharacterBody3D) -> void:
-	agentInputHandler   = AgentInputHandler.new(config.inputConfig)
+	agentInputHandler   = AgentInputHandler.new(config.INPUT_CONFIG)
 	viewManager         = ViewManager.new()
-	viewSemantics       = ViewSemantics.new(config.viewConfig)
-	locomotionSemantics = LocomotionSemantics.new(config.locomotionConfig)
-	motionAuthority     = MotionAuthority.new(config.motionConfig, characterBody)
+	viewSemantics       = ViewSemantics.new(config.VIEW_CONFIG)
+	locomotionSemantics = LocomotionSemantics.new(config.LOCOMOTION_CONFIG)
+	motionAuthority     = MotionAuthority.new(config.MOTION_CONFIG, characterBody)
 
 func _constructResponsibilities() -> void:
 	inputInterface        = InputInterface.new(agentInputHandler)
