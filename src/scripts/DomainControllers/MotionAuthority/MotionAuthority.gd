@@ -7,7 +7,10 @@ enum ForceApplication { CONTINUOUS, IMPULSE }
 ## Domains cross-module state.
 ## Not to be confused with "MotionState".
 class State extends RefCounted:
-	var config       : MotionConfig
+	# System Context
+	var tracerAPI : TracerAPI
+	var config    : MotionConfig
+	
 	var motionTarget : CharacterBody3D
 	
 	# Accepted proposals
@@ -25,8 +28,9 @@ class State extends RefCounted:
 	var curr_motion_state         := MotionState.STILL
 	var last_position             := Vector3.ZERO
 	
-	func _init(_config: MotionConfig, _motionTarget: CharacterBody3D) -> void:
+	func _init(_config: MotionConfig, _tracerAPI: TracerAPI, _motionTarget: CharacterBody3D) -> void:
 		config = _config
+		tracerAPI = _tracerAPI
 		motionTarget = _motionTarget
 
 var _motionState       : State
@@ -34,18 +38,22 @@ var _proposalReviewer  : ProposalReviewer
 var _motionResolver    : MotionResolver
 var _invariantEnforcer : InvariantEnforcer
 
-func _init(config: MotionConfig, motionTarget: CharacterBody3D) -> void:
-	_motionState = State.new(config, motionTarget)
+func _init(config: MotionConfig, tracerAPI: TracerAPI, motionTarget: CharacterBody3D) -> void:
+	_motionState = State.new(config, tracerAPI, motionTarget)
 	_proposalReviewer = ProposalReviewer.new(_motionState)
 	_motionResolver = MotionResolver.new(_motionState)
 	_invariantEnforcer = InvariantEnforcer.new(_motionState)
 
 func execute(delta: float, payload: Payload) -> void:
+	var span_token := _motionState.tracerAPI.START_SPAN(Observability.SpanNames.MOTION_AUTHORITY_EXECUTE)
+	
 	_update_state()
 	_proposalReviewer.review(payload.proposals)
 	_motionResolver.resolve(delta)
 	_invariantEnforcer.enforce(delta)
 	_motionState.motionTarget.move_and_slide()
+	
+	_motionState.tracerAPI.END_SPAN(span_token)
 
 func export(snapshot: Snapshot) -> void:
 	snapshot.motion_state = _motionState.curr_motion_state

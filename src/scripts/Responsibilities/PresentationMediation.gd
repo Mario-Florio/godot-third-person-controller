@@ -1,17 +1,25 @@
 class_name PresentationMediation
 extends RefCounted
 
+# Domain Controllers
 var _animationHandler: AnimationHandler
 var _visuals: Node3D
 
-func _init(animationHandler: AnimationHandler) -> void:
+# System Context
+var _tracerAPI: TracerAPI
+
+func _init(animationHandler: AnimationHandler, tracerAPI: TracerAPI) -> void:
 	_animationHandler = animationHandler
+	_tracerAPI = tracerAPI
 
 func execute(
 	delta: float,
 	referenceBasis: ViewIntentMediation.ReferenceBasis,
 	semanticIntent: IntentResolution.SemanticIntent,
-	physicalActorState: RealizationAuthority.PhysicalActorState) -> void:
+	physicalActorState: RealizationAuthority.PhysicalActorState
+) -> void:
+	
+	var span_token := _tracerAPI.START_SPAN(Observability.SpanNames.PRESENTATION_MEDIATION_EXECUTE)
 	
 	if _animationHandler:
 		var local_orientation := _derive_local_orientation(
@@ -33,6 +41,8 @@ func execute(
 			physicalActorState.max_horizontal_speed(),
 			physicalActorState.speed()
 		))
+	
+	_tracerAPI.END_SPAN(span_token)
 
 func setAnimationHandler(animationHandler: AnimationHandler) -> void:
 	_animationHandler = animationHandler

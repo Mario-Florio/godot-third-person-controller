@@ -1,14 +1,23 @@
 class_name InputInterface
 extends RefCounted
 
+# Domain Controllers
 var _agentInputHandler: AgentInputHandler
 var _viewProbe: ViewProbe
 
-func _init(agentInputHandler) -> void:
+# System Context
+var _tracerAPI: TracerAPI
+
+func _init(agentInputHandler, tracerAPI: TracerAPI) -> void:
 	_agentInputHandler = agentInputHandler
+	_tracerAPI = tracerAPI
 
 func execute() -> void:
+	var span_token := _tracerAPI.START_SPAN(Observability.SpanNames.INPUT_INTERFACE_EXECUTE)
+	
 	_agentInputHandler.execute()
+	
+	_tracerAPI.END_SPAN(span_token)
 
 func produce() -> IntentBearingInput:
 	return IntentBearingInput.new(_agentInputHandler)

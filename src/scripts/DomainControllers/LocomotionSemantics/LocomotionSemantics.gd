@@ -7,7 +7,10 @@ enum WorldState { CASUAL, ENGAGED, ALERT }
 enum MotionState { STILL, GROUNDED, AIRBORNE }
 
 class State extends RefCounted:
-	var config           : LocomotionConfig
+	# System Context
+	var config    : LocomotionConfig
+	var tracerAPI : TracerAPI
+	
 	var speed_multiplier : float
 	var intents          : Array[MotionIntent] = []
 	
@@ -28,20 +31,34 @@ class State extends RefCounted:
 	# Physical Actor State
 	var motionState := MotionState.STILL
 	
-	func _init(_config: LocomotionConfig) -> void:
+	func _init(_config: LocomotionConfig, _tracerAPI: TracerAPI) -> void:
 		config = _config
+		tracerAPI = _tracerAPI
 
 var _locomotionState : State
 var _locomotionStyle : LocomotionStyle
 var _speed_vector    : Array[float]
 
-func _init(config: LocomotionConfig) -> void:
-	_locomotionState = State.new(config)
+func _init(config: LocomotionConfig, tracerAPI: TracerAPI) -> void:
+	_locomotionState = State.new(config, tracerAPI)
 	_locomotionStyle = _getStyle(config.STYLE)
 
 func execute(payload: Payload) -> void:
+	var span_token := _locomotionState.tracerAPI.START_SPAN(Observability.SpanNames.LOCOMOTION_SEMANTICS_EXECUTE)
+	
 	_update_state(payload)
 	_locomotionState.intents = _locomotionStyle.author()
+	
+	_locomotionState.tracerAPI.ADD_EVENT(
+		span_token,
+		Observability.EventNames.MOTION_INTENTS_AUTHORED,
+		{
+			TraceFacade.AttributeNames.AMOUNT: _locomotionState.intents.size(),
+			TraceFacade.AttributeNames.MOTION_INTENTS: InstrumentationAdapter.formatMotionIntentsRecord(_locomotionState.intents)
+		}
+	)
+	
+	_locomotionState.tracerAPI.END_SPAN(span_token)
 
 func export(snapshot: Snapshot) -> void:
 	snapshot.intents = _locomotionState.intents

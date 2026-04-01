@@ -1,14 +1,21 @@
 class_name ViewIntentMediation
 extends RefCounted
 
+# Domain Controllers
 var _viewManager: ViewManager
 var _viewSemantics: ViewSemantics
 
-func _init(viewManager: ViewManager, viewSemantics: ViewSemantics) -> void:
+# System Context
+var _tracerAPI: TracerAPI
+
+func _init(viewManager: ViewManager, viewSemantics: ViewSemantics, tracerAPI: TracerAPI) -> void:
 	_viewManager = viewManager
 	_viewSemantics = viewSemantics
+	_tracerAPI = tracerAPI
 
 func execute(intentBearingInput: InputInterface.IntentBearingInput) -> void:
+	var span_token := _tracerAPI.START_SPAN(Observability.SpanNames.VIEW_INTENT_MEDIATION_EXECUTE)
+	
 	_viewManager.execute()
 	
 	var canonicalView := ViewManager.Snapshot.new(_viewManager)
@@ -18,6 +25,8 @@ func execute(intentBearingInput: InputInterface.IntentBearingInput) -> void:
 		intentBearingInput.focus(),
 		intentBearingInput.swap_shoulder()
 	).addActiveView(canonicalView.activeView))
+	
+	_tracerAPI.END_SPAN(span_token)
 
 func produce() -> ReferenceBasis:
 	return ReferenceBasis.new(_viewManager)

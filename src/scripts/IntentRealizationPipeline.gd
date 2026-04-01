@@ -18,10 +18,16 @@ var intentResolution      : IntentResolution
 var realizationAuthority  : RealizationAuthority
 var presentationMediation : PresentationMediation
 
+# System Context
+var observability: Observability
+
 ## Core pipeline setup. All required dependencies must be met
-func setup(config: ThirdPersonControllerConfig, characterBody: CharacterBody3D) -> void:
+func setup(config: ThirdPersonControllerConfig, characterBody: CharacterBody3D, _observability: Observability) -> void:
 	assert(config != null, "Config must be provided at setup [IntentRealizationPipeline.setup]")
 	assert(characterBody != null, "Character body must be provided at setup [IntentRealizationPipeline.setup]")
+	assert(_observability != null, "Observability must be provided at setup [IntentRealizationPipeline.setup]")
+	
+	observability = _observability
 	
 	_constructDomainControllers(config, characterBody)
 	_constructResponsibilities()
@@ -44,7 +50,8 @@ func setAnimationHandler(animationConfig: AnimationConfig, animationTree: Animat
 		animationHandler.setAnimationTree(animationTree)
 	
 	else:
-		animationHandler = AnimationHandler.new(animationConfig, animationTree)
+		var tracerAPI := observability.getTracerAPI(Observability.TracerNames.INTENT_REALIZATION_PIPELINE_CYCLE)
+		animationHandler = AnimationHandler.new(animationConfig, tracerAPI, animationTree)
 		presentationMediation.setAnimationHandler(animationHandler)
 
 ## Setter for view probe. Optional dependency; only required if using dynamic view discovery.
@@ -87,6 +94,9 @@ func notify(event: InputEvent) -> void:
 	agentInputHandler.notify(event)
 
 func run(delta: float) -> void:
+	var tracerAPI := observability.getTracerAPI(Observability.TracerNames.INTENT_REALIZATION_PIPELINE_CYCLE)
+	var span_token := tracerAPI.START_SPAN(Observability.SpanNames.INTENT_REALIZATION_PIPELINE_RUN)
+	
 	inputInterface.execute()
 	var intentBearingInput := inputInterface.produce()
 	
@@ -107,21 +117,28 @@ func run(delta: float) -> void:
 		referenceBasis,
 		semanticIntent,
 		realizationAuthority.produce())
+	
+	tracerAPI.END_SPAN(span_token)
+	tracerAPI.END_FRAME()
 
 # Utils
 func _constructDomainControllers(config : ThirdPersonControllerConfig, characterBody: CharacterBody3D) -> void:
-	agentInputHandler   = AgentInputHandler.new(config.INPUT_CONFIG)
-	viewManager         = ViewManager.new()
-	viewSemantics       = ViewSemantics.new(config.VIEW_CONFIG)
-	locomotionSemantics = LocomotionSemantics.new(config.LOCOMOTION_CONFIG)
-	motionAuthority     = MotionAuthority.new(config.MOTION_CONFIG, characterBody)
+	var tracerAPI := observability.getTracerAPI(Observability.TracerNames.INTENT_REALIZATION_PIPELINE_CYCLE)
+	
+	agentInputHandler   = AgentInputHandler.new(config.INPUT_CONFIG, tracerAPI)
+	viewManager         = ViewManager.new(tracerAPI)
+	viewSemantics       = ViewSemantics.new(config.VIEW_CONFIG, tracerAPI)
+	locomotionSemantics = LocomotionSemantics.new(config.LOCOMOTION_CONFIG, tracerAPI)
+	motionAuthority     = MotionAuthority.new(config.MOTION_CONFIG, tracerAPI, characterBody)
 
 func _constructResponsibilities() -> void:
-	inputInterface        = InputInterface.new(agentInputHandler)
-	viewIntentMediation   = ViewIntentMediation.new(viewManager, viewSemantics)
-	intentResolution      = IntentResolution.new(locomotionSemantics)
-	realizationAuthority  = RealizationAuthority.new(motionAuthority)
-	presentationMediation = PresentationMediation.new(animationHandler)
+	var tracerAPI := observability.getTracerAPI(Observability.TracerNames.INTENT_REALIZATION_PIPELINE_CYCLE)
+	
+	inputInterface        = InputInterface.new(agentInputHandler, tracerAPI)
+	viewIntentMediation   = ViewIntentMediation.new(viewManager, viewSemantics, tracerAPI)
+	intentResolution      = IntentResolution.new(locomotionSemantics, tracerAPI)
+	realizationAuthority  = RealizationAuthority.new(motionAuthority, tracerAPI)
+	presentationMediation = PresentationMediation.new(animationHandler, tracerAPI)
 
 func _connectDomains() -> void:
 	viewManager.connect("active_view_updated", viewSemantics.on_view_updated)
