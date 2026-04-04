@@ -1,0 +1,2 @@
+class_name SpanConfig
+extends ISpanConfig

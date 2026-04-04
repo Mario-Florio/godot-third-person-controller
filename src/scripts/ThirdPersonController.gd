@@ -103,7 +103,8 @@ func _attempt_init() -> void:
 	
 	intentRealizationPipeline.setup(
 		config,
-		characterBody
+		characterBody,
+		Observability.new(config.OBSERVABILITY_CONFIG)
 	)
 	
 	_initialized = true

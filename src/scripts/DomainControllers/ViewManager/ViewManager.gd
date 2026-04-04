@@ -2,6 +2,9 @@ class_name ViewManager
 extends RefCounted
 
 class State extends RefCounted:
+	# System Context
+	var tracerAPI: TracerAPI
+	
 	var _viewManager: ViewManager
 	
 	var activeView: ViewInterface:
@@ -13,21 +16,26 @@ class State extends RefCounted:
 	
 	var views: Dictionary # ViewInterface.id : ViewInterface
 	
-	func _init(viewManager: ViewManager) -> void:
+	func _init(viewManager: ViewManager, _tracerAPI: TracerAPI) -> void:
 		_viewManager = viewManager
+		tracerAPI = _tracerAPI
 
 var _viewManagerState: State
 var _viewRegistry: ViewRegistry
 var _viewArbitrator: ViewArbitrator
 
-func _init() -> void:
-	_viewManagerState = State.new(self)
+func _init(tracerAPI: TracerAPI) -> void:
+	_viewManagerState = State.new(self, tracerAPI)
 	_viewRegistry = ViewRegistry.new(_viewManagerState)
 	_viewArbitrator = ViewArbitrator.new(_viewManagerState)
 
 func execute() -> void:
+	var span_token := _viewManagerState.tracerAPI.START_SPAN(Observability.SpanNames.VIEW_MANAGER_EXECUTE)
+	
 	_viewRegistry.register()
 	_viewArbitrator.arbitrate()
+	
+	_viewManagerState.tracerAPI.END_SPAN(span_token)
 
 func export(snapshot: Snapshot) -> void:
 	if _viewManagerState.activeView:

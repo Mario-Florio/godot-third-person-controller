@@ -1,29 +1,48 @@
 class_name RealizationAuthority
 extends RefCounted
 
+# Domain Controllers
 var _motionAuthority: MotionAuthority
 var _positionAuthority: PositionAuthority
 
 # Intermediaries / Adapters
 var _proposalFactory := ProposalFactory.new()
 
-func _init(motionAuthority: MotionAuthority) -> void:
+# System Context
+var _tracerAPI: TracerAPI
+
+func _init(motionAuthority: MotionAuthority, tracerAPI: TracerAPI) -> void:
 	_motionAuthority = motionAuthority
+	_tracerAPI = tracerAPI
 
 func execute(
 	delta: float,
 	semanticIntent: IntentResolution.SemanticIntent
 ) -> void:
 	
+	var span_token := _tracerAPI.START_SPAN(Observability.SpanNames.REALIZATION_AUTHORITY_EXECUTE)
+	
+	var proposals := _proposalFactory.provideMotionProposals(semanticIntent.intents())
+	_tracerAPI.ADD_EVENT(
+		span_token,
+		Observability.EventNames.MOTION_PROPOSALS_CREATED,
+		{
+			Observability.AttributeNames.AMOUNT: proposals.size(),
+			Observability.AttributeNames.MOTION_PROPOSALS: InstrumentationAdapter.formatMotionProposalsRecord(proposals)
+		}
+	)
+	
 	_motionAuthority.execute(
 		delta,
 		MotionAuthority.Payload.new(
-			_proposalFactory.provideMotionProposals(semanticIntent.intents())
+			proposals
 		)
 	)
 	
 	if _positionAuthority:
 		_positionAuthority.execute()
+	
+	_tracerAPI.END_SPAN(span_token)
 
 func produce() -> PhysicalActorState:
 	return PhysicalActorState.new(_motionAuthority)

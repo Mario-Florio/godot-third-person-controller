@@ -7,6 +7,7 @@ extends Resource
 @export var MOTION_CONFIG        : MotionConfig
 @export var ANIMATION_CONFIG     : AnimationConfig
 @export var POSITION_CONFIG      : PositionConfig
+@export var OBSERVABILITY_CONFIG : ObservabilityConfig
 
 var _setup := false
 
@@ -16,7 +17,8 @@ func setup(
 	locomotionConfig: LocomotionConfig = null,
 	motionConfig: MotionConfig = null,
 	animationConfig: AnimationConfig = null,
-	positionConfig: PositionConfig = null
+	positionConfig: PositionConfig = null,
+	observabilityConfig: ObservabilityConfig = null
 ) -> ThirdPersonControllerConfig:
 	
 	if _setup == true: return
@@ -34,6 +36,11 @@ func setup(
 	
 	if motionConfig != null: MOTION_CONFIG = motionConfig
 	elif MOTION_CONFIG == null: MOTION_CONFIG = MotionConfig.new()
+	
+	if observabilityConfig != null: OBSERVABILITY_CONFIG = observabilityConfig
+	elif OBSERVABILITY_CONFIG == null: OBSERVABILITY_CONFIG = ObservabilityConfig.new()
+	
+	OBSERVABILITY_CONFIG.setup()
 	
 	# Optional
 	if animationConfig != null: ANIMATION_CONFIG = animationConfig

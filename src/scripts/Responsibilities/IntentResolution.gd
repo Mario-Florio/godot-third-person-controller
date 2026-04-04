@@ -1,16 +1,23 @@
 class_name IntentResolution
 extends RefCounted
 
+# Domain Controllers
 var _locomotionSemantics: LocomotionSemantics
 
-func _init(locomotionSemantics: LocomotionSemantics) -> void:
+# System Context
+var _tracerAPI: TracerAPI
+
+func _init(locomotionSemantics: LocomotionSemantics, tracerAPI: TracerAPI) -> void:
 	_locomotionSemantics = locomotionSemantics
+	_tracerAPI = tracerAPI
 
 func execute(
 	intentBearingInput: InputInterface.IntentBearingInput,
 	referenceBasis: ViewIntentMediation.ReferenceBasis,
 	physicalActorState: RealizationAuthority.PhysicalActorState # Previous frame
 ) -> void:
+	
+	var span_token := _tracerAPI.START_SPAN(Observability.SpanNames.INTENT_RESOLUTION_EXECUTE)
 	
 	_locomotionSemantics.execute(LocomotionSemantics.Payload.new()
 		.addIntentBearingInput(
@@ -29,6 +36,8 @@ func execute(
 			_adaptMotionState(physicalActorState.motion_state())
 		)
 	)
+	
+	_tracerAPI.END_SPAN(span_token)
 
 func produce() -> SemanticIntent:
 	return SemanticIntent.new(_locomotionSemantics)

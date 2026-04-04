@@ -2,24 +2,31 @@ class_name AnimationHandler
 extends RefCounted
 
 class State extends RefCounted:
-	var config: AnimationConfig
+	# System Context
+	var config    : AnimationConfig
+	var tracerAPI : TracerAPI
 	
 	var is_grounded: bool
 	var is_airborne: bool
 	
-	func _init(_config: AnimationConfig) -> void:
+	func _init(_config: AnimationConfig, _tracerAPI: TracerAPI) -> void:
 		config = _config
+		tracerAPI = _tracerAPI
 
 var _animationState: State
 var _animationTreeManager: AnimationTreeManager
 
-func _init(config: AnimationConfig, animationTree: AnimationTree) -> void:
-	_animationState = State.new(config)
+func _init(config: AnimationConfig, tracerAPI: TracerAPI, animationTree: AnimationTree) -> void:
+	_animationState = State.new(config, tracerAPI)
 	_animationTreeManager = AnimationTreeManager.new(_animationState, animationTree)
 
 func execute(payload: AnimationHandler.Payload) -> void:
+	var span_token := _animationState.tracerAPI.START_SPAN(Observability.SpanNames.ANIMATION_HANDLER_EXECUTE)
+	
 	_update_state(payload)
 	_animationTreeManager.manage(payload)
+	
+	_animationState.tracerAPI.END_SPAN(span_token)
 
 func setAnimationTree(animationTree: AnimationTree) -> void:
 	_animationTreeManager.setAnimationTree(animationTree)

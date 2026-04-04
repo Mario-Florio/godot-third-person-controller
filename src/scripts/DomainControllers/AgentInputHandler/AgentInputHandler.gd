@@ -3,7 +3,9 @@ extends RefCounted
 
 enum SpeedIntent { SLOW, NORMAL, FAST }
 
+# System Context
 var _config: InputConfig
+var _tracerAPI: TracerAPI
 
 # Intentions
 var _look_delta: Vector2         # Desired look change
@@ -16,8 +18,9 @@ var _jump: bool
 var _dash: bool
 var _lift: bool
 
-func _init(config: InputConfig) -> void:
+func _init(config: InputConfig, tracerAPI: TracerAPI) -> void:
 	_config = config
+	_tracerAPI = tracerAPI
 	
 	_init_input_map(_config.Actions.values())
 
@@ -26,8 +29,22 @@ func notify(event: InputEvent) -> void:
 		_look_delta_pending += event.relative
 
 func execute() -> void:
+	var span_token := _tracerAPI.START_SPAN(Observability.SpanNames.AGENT_INPUT_HANDLER_EXECUTE)
+	
 	_reset_state()
 	_resolve_intent()
+	_tracerAPI.ADD_EVENT(span_token, Observability.EventNames.INTENT_RESOLVED, {
+		&"look_delta": _look_delta,
+		&"focus": _focus,
+		&"swap_shoulder": _swap_shoulder,
+		&"move_vector": _move_vector,
+		&"speed_intent": _speed_intent,
+		&"jump": _jump,
+		&"dash": _dash,
+		&"lift": _lift
+	})
+	
+	_tracerAPI.END_SPAN(span_token)
 
 func export(snapshot: Snapshot) -> void:
 	snapshot.look_delta = _look_delta

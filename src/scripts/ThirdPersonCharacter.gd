@@ -17,15 +17,15 @@ func _ready():
 	controller.collisionBody = collisionBody
 	
 	if animationTree:
-		controller.config.animationConfig.is_grounded_path = (
+		controller.config.ANIMATION_CONFIG.is_grounded_path = (
 			"parameters/Locomotion/conditions/is_grounded"
 		)
-		controller.config.animationConfig.is_airborne_path = (
+		controller.config.ANIMATION_CONFIG.is_airborne_path = (
 			"parameters/Locomotion/conditions/is_airborne"
 		)
-		controller.config.animationConfig.grounded_blend_position_path = (
+		controller.config.ANIMATION_CONFIG.grounded_blend_position_path = (
 			"parameters/Locomotion/Grounded/blend_position"
 		)
-		controller.config.animationConfig.airborne_blend_position_path = (
+		controller.config.ANIMATION_CONFIG.airborne_blend_position_path = (
 			"parameters/Locomotion/Airborne/blend_position"
 		)

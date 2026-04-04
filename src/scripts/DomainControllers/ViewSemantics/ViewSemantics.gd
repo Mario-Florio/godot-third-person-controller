@@ -2,13 +2,16 @@ class_name ViewSemantics
 extends RefCounted
 
 class State extends RefCounted:
+	# System Context
 	var config: ViewConfig
+	var tracerAPI: TracerAPI
 	
 	var is_focused := false
 	var is_swapped := false
 	
-	func _init(_config: ViewConfig) -> void:
+	func _init(_config: ViewConfig, _tracerAPI: TracerAPI) -> void:
 		config = _config
+		tracerAPI = _tracerAPI
 
 var _view: ViewInterface
 var _viewUpdated := false
@@ -16,20 +19,25 @@ var _viewState: State
 var _viewHandlers: Dictionary
 var _viewHandler: ViewHandler
 
-func _init(config: ViewConfig) -> void:
-	_viewState = State.new(config)
+func _init(config: ViewConfig, tracerAPI: TracerAPI) -> void:
+	_viewState = State.new(config, tracerAPI)
 	_viewHandlers.standard = ViewHandler.new(_view, _viewState)
 	_viewHandlers.focused = FocusedHandler.new(_view, _viewState)
 	_viewHandler = _viewHandlers.standard
 
 func execute(payload: Payload) -> void:
-	if _viewUpdated == true:
-		_updateView(payload.activeView)
+	var span_token := _viewState.tracerAPI.START_SPAN(Observability.SpanNames.VIEW_SEMANTICS_EXECUTE)
 	
-	if _view == null: return # Guard against cases where no view is active
+	if _viewUpdated == true: _updateView(payload.activeView)
+	
+	if _view == null:
+		_viewState.tracerAPI.END_SPAN(span_token)
+		return # Guard against cases where no view is active
 	
 	_update_state(payload)
 	_viewHandler.handle(payload)
+	
+	_viewState.tracerAPI.END_SPAN(span_token)
 
 func export() -> void:
 	pass
