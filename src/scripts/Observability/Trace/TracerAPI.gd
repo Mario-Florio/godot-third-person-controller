@@ -44,6 +44,7 @@ func ADD_EVENT(
 	if span_config.ENABLED == false: return
 	
 	var event_config: IEventConfig = span_config.getEvents().get(event_name)
+	if event_config == null: return # Guard clause for cases where editor doesn't have an event config assigned
 	if event_config.ENABLED == false: return
 	
 	_disable_attributes(event_config.getAttributes(), event_attributes)
