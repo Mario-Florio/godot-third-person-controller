@@ -64,11 +64,43 @@ func getTracerAPI(name: StringName) -> TracerAPI:
 func _setupTracerAPIs() -> void:
 	var intentRealizationPipelineCycleTracerAPI := TracerAPI.new(
 		_config.INTENT_REALIZATION_PIPELINE_CYCLE_TRACER_CONFIG,
-		NoopTracer.new(_config.INTENT_REALIZATION_PIPELINE_CYCLE_TRACER_CONFIG),
+		SyncTracer.new(
+			_config.INTENT_REALIZATION_PIPELINE_CYCLE_TRACER_CONFIG,
+			_getSpanProcessor(
+				_config.INTENT_REALIZATION_PIPELINE_CYCLE_TRACER_CONFIG.PROCESSOR,
+				_getSpanExporter(_config.INTENT_REALIZATION_PIPELINE_CYCLE_TRACER_CONFIG.EXPORTER)
+			)
+		),
 		_getSpanConfigMap(TracerNames.INTENT_REALIZATION_PIPELINE_CYCLE)
 	)
 	
 	_tracerAPIProvider.registerTracerAPI(TracerNames.INTENT_REALIZATION_PIPELINE_CYCLE, intentRealizationPipelineCycleTracerAPI)
+
+func _getSpanProcessor(processorType: ITracerConfig.ProcessorType, exporter: ISpanExporter) -> ISpanProcessor:
+	match processorType:
+		ITracerConfig.ProcessorType.SIMPLE:
+			return SimpleSpanProcessor.new(exporter)
+		
+		ITracerConfig.ProcessorType.BATCH:
+			return BatchSpanProcessor.new(exporter)
+		
+		_:
+			assert(false, "ProcessorType mismatch [TraceFacade._getSpanProcessor]")
+	
+	return SimpleSpanProcessor.new(exporter)
+
+func _getSpanExporter(exporterType: ITracerConfig.ExporterType) -> ISpanExporter:
+	match exporterType:
+		ITracerConfig.ExporterType.CONSOLE:
+			return ConsoleSpanExporter.new()
+		
+		ITracerConfig.ExporterType.FILE:
+			return FileSpanExporter.new()
+		
+		_:
+			assert(false, "ExporterType mismatch [TraceFacade._getSpanExporter]")
+	
+	return ConsoleSpanExporter.new()
 
 func _getSpanConfigMap(tracerName: StringName) -> Dictionary[StringName, ISpanConfig]:
 	match tracerName:
